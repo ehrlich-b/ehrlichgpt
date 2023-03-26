@@ -19,12 +19,11 @@ from repository import Repository
 from message import Message
 from utils import Utils
 
-def get_db_path(channel_id):
-    return os.path.join("conversations", f"{channel_id}.db")
-
 def clean_up_response(discord_name, original_response):
-    original_response = original_response.lstrip(discord_name + ":")
-    original_response = original_response.lstrip("AI:")
+    if original_response.startswith(discord_name + ":"):
+        original_response = original_response[len(discord_name + ":"):]
+    elif original_response.startswith("AI:"):
+        original_response = original_response[len("AI:"):]
     return original_response.strip()
 
 async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):
@@ -37,7 +36,6 @@ async def run_chain(channel, chain, discord_context, conversation_context, long_
         conversation_context=conversation_context,
         long_term_memory=long_term_memory,
     )
-
     response = clean_up_response(discord_name, response)
 
     if response == 'PASS':
@@ -59,7 +57,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 conversations = {}
-chat = ChatOpenAI(temperature=0.9)
+chat = ChatOpenAI(temperature=0.9, max_tokens=500)
 
 os.makedirs("conversations", exist_ok=True)
 
@@ -71,27 +69,30 @@ async def on_ready():
             continue
         channel_db = os.path.splitext(db_file)[0]
         channel_id = int(channel_db.split('.')[0])
-        db_path = get_db_path(channel_id)
+        db_path = Repository.get_db_path(channel_id)
         Repository.create_db_if_not_exists(db_path)
-        conversations[channel_id] = Repository.load_conversation(db_path)
+        conversations[channel_id] = Repository.load_conversation(channel_id, db_path)
 
 @client.event
 async def on_message(message):
     pprint.pprint(message)
     channel_id = message.channel.id
-    db_path = get_db_path(channel_id)
+    db_path = Repository.get_db_path(channel_id)
     Repository.create_db_if_not_exists(db_path)
 
     if channel_id not in conversations:
-        conversations[channel_id] = Conversation([], '', '')
+        conversations[channel_id] = Conversation(channel_id, [], '', '')
 
     current_conversation = conversations[channel_id]
     if message.author == client.user:
         # Add our own AI message to conversation
         current_conversation.add_message(Message("ai", message.content))
         Repository.save_message(db_path, "ai", message.content)
+        async with current_conversation.lock:
+            await Repository.summarize_conversation(current_conversation)
         return
     else:
+        # TODO: These messages are getting deleted if we're mid-summarizer - do we need a message list lock?
         formatted_sender = message.author.name + "#" + message.author.discriminator
         current_conversation.add_message(Message(formatted_sender, message.content))
         Repository.save_message(db_path, formatted_sender, message.content)
@@ -103,19 +104,16 @@ async def on_message(message):
         else:
             context = "Unknown"
 
-        if current_conversation.lock.locked():
-            current_conversation.dirty = True
-        else:
-            while True:
-                chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
-                chain = LLMChain(llm=chat, prompt=chat_prompt_template)
-                current_conversation.dirty = False
-                typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
-                chain_run_task = asyncio.create_task(run_chain(message.channel, chain, context, None, None))
-                async with current_conversation.lock:
+        if not current_conversation.lock.locked():
+            async with current_conversation.lock:
+                while True:
+                    chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
+                    chain = LLMChain(llm=chat, prompt=chat_prompt_template)
+                    typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
+                    chain_run_task = asyncio.create_task(run_chain(message.channel, chain, context, current_conversation.get_active_memory(), None))
                     await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
                     typing_indicator_task.cancel()
-                    if not current_conversation.dirty:
+                    if not current_conversation.sync_busy_history():
                         break
 
 

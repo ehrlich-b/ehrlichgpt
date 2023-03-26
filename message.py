@@ -14,6 +14,7 @@ class Message:
     def __init__(self, sender, content):
         self.sender = sender
         self.content = content
+        self.token_count = 0
 
     def get_prompt_template(self):
         if self.sender == "ai":
@@ -33,3 +34,8 @@ class Message:
 
         return message_prompt
 
+    def get_number_of_tokens(self):
+        if self.token_count == 0 and self.content != "":
+            llm = ChatOpenAI()
+            self.token_count = llm.get_num_tokens(self.content)
+        return self.token_count

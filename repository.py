@@ -1,7 +1,8 @@
+import os
 import sqlite3
 from conversation import Conversation
 from message import Message
-
+from langchain.chat_models import ChatOpenAI
 class Repository:
     def create_db_if_not_exists(db_path):
         conn = sqlite3.connect(db_path)
@@ -56,14 +57,14 @@ class Repository:
         cursor = conn.execute("SELECT context FROM conversation_context")
         context = cursor.fetchone()
         conn.close()
-        return context if context else ''
+        return context[0] if context else ''
 
     def load_long_term_memory(db_path):
         conn = sqlite3.connect(db_path)
         cursor = conn.execute("SELECT memory FROM long_term_memory")
         memory = cursor.fetchone()
         conn.close()
-        return memory if memory else ''
+        return memory[0] if memory else ''
 
     def sync_conversation_context(db_path, conversation):
         Repository.clear_messages(db_path)
@@ -72,11 +73,35 @@ class Repository:
         Repository.save_conversation_context(db_path, conversation.conversation_context)
         Repository.save_long_term_memory(db_path, conversation.long_term_memory)
 
-    def load_conversation(db_path):
+    def load_conversation(channel_id, db_path):
         messages = Repository.load_messages(db_path)
         conversation_context = Repository.load_conversation_context(db_path)
         long_term_memory = Repository.load_long_term_memory(db_path)
-        conversation = Conversation([], conversation_context, long_term_memory)
+        conversation = Conversation(channel_id, [], conversation_context, long_term_memory)
         for sender, content in messages:
             conversation.add_message(Message(sender, content))
         return conversation
+
+    @staticmethod
+    async def summarize_conversation(conversation):
+        while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > 400:
+            print(conversation.get_conversation_token_count())
+            await conversation.run_summarizer()
+            new_messages = []
+            total_tokens = 0
+            for message in reversed(conversation.conversation_history):
+                new_messages.insert(0, message)
+                total_tokens += message.get_number_of_tokens()
+                if total_tokens > 50:
+                    break
+            conversation.conversation_history = new_messages
+            conversation.sync_busy_history()
+            print(conversation.get_conversation_token_count())
+            Repository.save_conversation_context(Repository.get_db_path(conversation.conversation_id), conversation.active_memory)
+            Repository.clear_messages(Repository.get_db_path(conversation.conversation_id))
+            for message in conversation.conversation_history:
+                Repository.save_message(Repository.get_db_path(conversation.conversation_id), message.sender, message.content)
+
+
+    def get_db_path(channel_id):
+        return os.path.join("conversations", f"{channel_id}.db")

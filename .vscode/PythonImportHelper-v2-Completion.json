@@ -60,6 +60,62 @@
         "documentation": {}
     },
     {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
         "label": "ChatPromptTemplate",
         "importPath": "langchain.prompts.chat",
         "description": "langchain.prompts.chat",
@@ -208,38 +264,6 @@
         "documentation": {}
     },
     {
-        "label": "LLMChain",
-        "importPath": "langchain.chains",
-        "description": "langchain.chains",
-        "isExtraImport": true,
-        "detail": "langchain.chains",
-        "documentation": {}
-    },
-    {
-        "label": "LLMChain",
-        "importPath": "langchain.chains",
-        "description": "langchain.chains",
-        "isExtraImport": true,
-        "detail": "langchain.chains",
-        "documentation": {}
-    },
-    {
-        "label": "ChatOpenAI",
-        "importPath": "langchain.chat_models",
-        "description": "langchain.chat_models",
-        "isExtraImport": true,
-        "detail": "langchain.chat_models",
-        "documentation": {}
-    },
-    {
-        "label": "ChatOpenAI",
-        "importPath": "langchain.chat_models",
-        "description": "langchain.chat_models",
-        "isExtraImport": true,
-        "detail": "langchain.chat_models",
-        "documentation": {}
-    },
-    {
         "label": "Conversation",
         "importPath": "conversation",
         "description": "conversation",
@@ -327,17 +351,8 @@
         "kind": 6,
         "importPath": "conversation",
         "description": "conversation",
-        "peekOfCode": "class Conversation:\n    def __init__(self, conversation_history, active_memory, long_term_memory) -> None:\n        self.conversation_history = conversation_history\n        self.lock = asyncio.Lock()\n        self.dirty = False\n        self.active_memory = active_memory\n        self.long_term_memory = long_term_memory\n    def add_message(self, message):\n        self.conversation_history.append(message)\n    def get_conversation_prompts(self):",
+        "peekOfCode": "class Conversation:\n    TOKEN_WINDOW_SIZE = 500\n    def __init__(self, conversation_id, conversation_history, active_memory, long_term_memory) -> None:\n        self.conversation_id = conversation_id\n        self.conversation_history = conversation_history\n        self.busy_history = []\n        self.lock = asyncio.Lock()\n        self.active_memory = active_memory\n        self.long_term_memory = long_term_memory\n    def add_message(self, message):",
         "detail": "conversation",
-        "documentation": {}
-    },
-    {
-        "label": "get_db_path",
-        "kind": 2,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "def get_db_path(channel_id):\n    return os.path.join(\"conversations\", f\"{channel_id}.db\")\ndef clean_up_response(discord_name, original_response):\n    original_response = original_response.lstrip(discord_name + \":\")\n    original_response = original_response.lstrip(\"AI:\")\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    discord_name = 'EhrlichGPT'\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",",
-        "detail": "main",
         "documentation": {}
     },
     {
@@ -345,7 +360,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    original_response = original_response.lstrip(discord_name + \":\")\n    original_response = original_response.lstrip(\"AI:\")\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    discord_name = 'EhrlichGPT'\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",\n        discord_name=discord_name,\n        qualities=\"Kind, Witty, Funny, Willing to help, Acerbic, Serious when context calls for it\",",
+        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    discord_name = 'EhrlichGPT'\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",",
         "detail": "main",
         "documentation": {}
     },
@@ -354,7 +369,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
+        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
         "detail": "main",
         "documentation": {}
     },
@@ -363,7 +378,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):",
+        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):",
         "detail": "main",
         "documentation": {}
     },
@@ -372,7 +387,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":",
+        "peekOfCode": "intents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":",
         "detail": "main",
         "documentation": {}
     },
@@ -381,7 +396,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "client = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue",
+        "peekOfCode": "client = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue",
         "detail": "main",
         "documentation": {}
     },
@@ -390,7 +405,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "conversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]",
+        "peekOfCode": "conversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]",
         "detail": "main",
         "documentation": {}
     },
@@ -399,7 +414,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "chat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]\n        channel_id = int(channel_db.split('.')[0])",
+        "peekOfCode": "chat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]\n        channel_id = int(channel_db.split('.')[0])",
         "detail": "main",
         "documentation": {}
     },
@@ -408,7 +423,7 @@
         "kind": 6,
         "importPath": "message",
         "description": "message",
-        "peekOfCode": "class Message:\n    def __init__(self, sender, content):\n        self.sender = sender\n        self.content = content\n    def get_prompt_template(self):\n        if self.sender == \"ai\":\n            message_prompt = AIMessagePromptTemplate(\n                prompt=PromptTemplate(\n                    template=Utils.escape_prompt_content(self.content),\n                    input_variables=[],",
+        "peekOfCode": "class Message:\n    def __init__(self, sender, content):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n    def get_prompt_template(self):\n        if self.sender == \"ai\":\n            message_prompt = AIMessagePromptTemplate(\n                prompt=PromptTemplate(\n                    template=Utils.escape_prompt_content(self.content),",
         "detail": "message",
         "documentation": {}
     },
