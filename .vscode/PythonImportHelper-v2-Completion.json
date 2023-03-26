@@ -1,0 +1,433 @@
+[
+    {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "ChatPromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "HumanMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "SystemMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "AIMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "ChatPromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "HumanMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "SystemMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "AIMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "ChatPromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "HumanMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "SystemMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "AIMessagePromptTemplate",
+        "importPath": "langchain.prompts.chat",
+        "description": "langchain.prompts.chat",
+        "isExtraImport": true,
+        "detail": "langchain.prompts.chat",
+        "documentation": {}
+    },
+    {
+        "label": "discord",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "discord",
+        "description": "discord",
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "DMChannel",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "TextChannel",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "pprint",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pprint",
+        "description": "pprint",
+        "detail": "pprint",
+        "documentation": {}
+    },
+    {
+        "label": "sqlite3",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sqlite3",
+        "description": "sqlite3",
+        "detail": "sqlite3",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "Conversation",
+        "importPath": "conversation",
+        "description": "conversation",
+        "isExtraImport": true,
+        "detail": "conversation",
+        "documentation": {}
+    },
+    {
+        "label": "Conversation",
+        "importPath": "conversation",
+        "description": "conversation",
+        "isExtraImport": true,
+        "detail": "conversation",
+        "documentation": {}
+    },
+    {
+        "label": "Repository",
+        "importPath": "repository",
+        "description": "repository",
+        "isExtraImport": true,
+        "detail": "repository",
+        "documentation": {}
+    },
+    {
+        "label": "Message",
+        "importPath": "message",
+        "description": "message",
+        "isExtraImport": true,
+        "detail": "message",
+        "documentation": {}
+    },
+    {
+        "label": "Message",
+        "importPath": "message",
+        "description": "message",
+        "isExtraImport": true,
+        "detail": "message",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "version_pattern",
+        "kind": 5,
+        "importPath": "evenv.bin.publish",
+        "description": "evenv.bin.publish",
+        "peekOfCode": "version_pattern = r'\\d\\.\\d\\.\\d'\nparser = argparse.ArgumentParser()\nparser.add_argument('version', help='a SEMVER string X.Y.Z')\nargs = parser.parse_args()\nif not re.match(version_pattern, args.version):\n    print('argument must be SEMVER string in format X.Y.Z')\nelse:\n    with open('setup.py') as fp:\n        old_setupfile = fp.read()\n    new_setupfile = re.sub(f\"version='{version_pattern}'\",",
+        "detail": "evenv.bin.publish",
+        "documentation": {}
+    },
+    {
+        "label": "parser",
+        "kind": 5,
+        "importPath": "evenv.bin.publish",
+        "description": "evenv.bin.publish",
+        "peekOfCode": "parser = argparse.ArgumentParser()\nparser.add_argument('version', help='a SEMVER string X.Y.Z')\nargs = parser.parse_args()\nif not re.match(version_pattern, args.version):\n    print('argument must be SEMVER string in format X.Y.Z')\nelse:\n    with open('setup.py') as fp:\n        old_setupfile = fp.read()\n    new_setupfile = re.sub(f\"version='{version_pattern}'\",\n                           f\"version='{args.version}'\", old_setupfile)",
+        "detail": "evenv.bin.publish",
+        "documentation": {}
+    },
+    {
+        "label": "args",
+        "kind": 5,
+        "importPath": "evenv.bin.publish",
+        "description": "evenv.bin.publish",
+        "peekOfCode": "args = parser.parse_args()\nif not re.match(version_pattern, args.version):\n    print('argument must be SEMVER string in format X.Y.Z')\nelse:\n    with open('setup.py') as fp:\n        old_setupfile = fp.read()\n    new_setupfile = re.sub(f\"version='{version_pattern}'\",\n                           f\"version='{args.version}'\", old_setupfile)\n    with open('setup.py', 'w') as fp:\n        print(new_setupfile, file=fp)",
+        "detail": "evenv.bin.publish",
+        "documentation": {}
+    },
+    {
+        "label": "Conversation",
+        "kind": 6,
+        "importPath": "conversation",
+        "description": "conversation",
+        "peekOfCode": "class Conversation:\n    def __init__(self, conversation_history, active_memory, long_term_memory) -> None:\n        self.conversation_history = conversation_history\n        self.lock = asyncio.Lock()\n        self.dirty = False\n        self.active_memory = active_memory\n        self.long_term_memory = long_term_memory\n    def add_message(self, message):\n        self.conversation_history.append(message)\n    def get_conversation_prompts(self):",
+        "detail": "conversation",
+        "documentation": {}
+    },
+    {
+        "label": "get_db_path",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_db_path(channel_id):\n    return os.path.join(\"conversations\", f\"{channel_id}.db\")\ndef clean_up_response(discord_name, original_response):\n    original_response = original_response.lstrip(discord_name + \":\")\n    original_response = original_response.lstrip(\"AI:\")\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    discord_name = 'EhrlichGPT'\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "clean_up_response",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    original_response = original_response.lstrip(discord_name + \":\")\n    original_response = original_response.lstrip(\"AI:\")\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    discord_name = 'EhrlichGPT'\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",\n        discord_name=discord_name,\n        qualities=\"Kind, Witty, Funny, Willing to help, Acerbic, Serious when context calls for it\",",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "discord_bot_key",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "intents",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "intents.message_content",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "intents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "client",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "client = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "conversations",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "conversations = {}\nchat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "chat",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "chat = ChatOpenAI(temperature=0.9)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]\n        channel_id = int(channel_db.split('.')[0])",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "Message",
+        "kind": 6,
+        "importPath": "message",
+        "description": "message",
+        "peekOfCode": "class Message:\n    def __init__(self, sender, content):\n        self.sender = sender\n        self.content = content\n    def get_prompt_template(self):\n        if self.sender == \"ai\":\n            message_prompt = AIMessagePromptTemplate(\n                prompt=PromptTemplate(\n                    template=Utils.escape_prompt_content(self.content),\n                    input_variables=[],",
+        "detail": "message",
+        "documentation": {}
+    },
+    {
+        "label": "Repository",
+        "kind": 6,
+        "importPath": "repository",
+        "description": "repository",
+        "peekOfCode": "class Repository:\n    def create_db_if_not_exists(db_path):\n        conn = sqlite3.connect(db_path)\n        conn.execute('''CREATE TABLE IF NOT EXISTS messages\n                        (id INTEGER PRIMARY KEY AUTOINCREMENT,\n                        sender TEXT NOT NULL,\n                        content TEXT NOT NULL);''')\n        conn.execute('''CREATE TABLE IF NOT EXISTS conversation_context\n                        (id INTEGER PRIMARY KEY AUTOINCREMENT,\n                        context TEXT NOT NULL);''')",
+        "detail": "repository",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "kind": 6,
+        "importPath": "utils",
+        "description": "utils",
+        "peekOfCode": "class Utils:\n    def escape_prompt_content(content):\n        return content.replace('{', '{{').replace('}', '}}')",
+        "detail": "utils",
+        "documentation": {}
+    }
+]
