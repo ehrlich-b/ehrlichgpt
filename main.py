@@ -19,6 +19,8 @@ from repository import Repository
 from message import Message
 from utils import Utils
 
+DISCORD_NAME = 'EhrlichGPT'
+
 def clean_up_response(discord_name, original_response):
     if original_response.startswith(discord_name + ":"):
         original_response = original_response[len(discord_name + ":"):]
@@ -27,21 +29,33 @@ def clean_up_response(discord_name, original_response):
     return original_response.strip()
 
 async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):
-    discord_name = 'EhrlichGPT'
+
     response = await chain.arun(
         name="Bryan Ehrlich",
-        discord_name=discord_name,
+        discord_name=DISCORD_NAME,
         qualities="Kind, Witty, Funny, Willing to help, Acerbic, Serious when context calls for it",
         discord_context=discord_context,
         conversation_context=conversation_context,
-        long_term_memory=long_term_memory,
+        long_term_memory='',
     )
-    response = clean_up_response(discord_name, response)
-
-    if response == 'PASS':
+    response = clean_up_response(DISCORD_NAME, response)
+    if response.startswith('PASS'):
         print('Bot declined to respond')
-    else:
-        await channel.send(response)
+        return
+    elif response.startswith('MEMORY'):
+        # TODO: Make memory actually do something first
+        pass
+        # response = await chain.arun(
+        #     name="Bryan Ehrlich",
+        #     discord_name=discord_name,
+        #     qualities="Kind, Witty, Funny, Willing to help, Acerbic, Serious when context calls for it",
+        #     discord_context=discord_context,
+        #     conversation_context=conversation_context,
+        #     long_term_memory=long_term_memory,
+        # )
+
+    response = clean_up_response(DISCORD_NAME, response)
+    await channel.send(response)
 
 
 
@@ -97,24 +111,38 @@ async def on_message(message):
         current_conversation.add_message(Message(formatted_sender, message.content))
         Repository.save_message(db_path, formatted_sender, message.content)
 
+        is_group_chat = False
         if isinstance(message.channel, DMChannel):
             context = "Direct Message"
         elif isinstance(message.channel, TextChannel):
             context = "Group Room with " + str(len(message.channel.members)) + " members"
+            is_group_chat = True
         else:
             context = "Unknown"
+            is_group_chat = True
 
         if not current_conversation.lock.locked():
             async with current_conversation.lock:
-                while True:
-                    chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
-                    chain = LLMChain(llm=chat, prompt=chat_prompt_template)
-                    typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
-                    chain_run_task = asyncio.create_task(run_chain(message.channel, chain, context, current_conversation.get_active_memory(), None))
-                    await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
-                    typing_indicator_task.cancel()
-                    if not current_conversation.sync_busy_history():
-                        break
+                if not is_group_chat:
+                    await send_message_with_typing_indicator(current_conversation, context, message.channel, message, is_group_chat)
+                else:
+                    if DISCORD_NAME.lower() in message.content.lower():
+                        await send_message_with_typing_indicator(current_conversation, context, message.channel, message, is_group_chat)
+                    else:
+                        # Nobody is talking to us, summarize larger chunks so we're not constantly churning through summarization
+                        await Repository.summarize_conversation(current_conversation, trigger_token_limit=1000)
 
+
+async def send_message_with_typing_indicator(current_conversation, discord_context, channel, message, is_group_chat):
+    channel_id = channel.id
+    while True:
+        chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
+        chain = LLMChain(llm=chat, prompt=chat_prompt_template)
+        typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
+        chain_run_task = asyncio.create_task(run_chain(message.channel, chain, discord_context, current_conversation.get_active_memory(), None))
+        await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
+        typing_indicator_task.cancel()
+        if not current_conversation.sync_busy_history() or is_group_chat:
+            break
 
 client.run(discord_bot_key)

@@ -83,8 +83,10 @@ class Repository:
         return conversation
 
     @staticmethod
-    async def summarize_conversation(conversation):
-        while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > 400:
+    async def summarize_conversation(conversation, trigger_token_limit=400, conversation_window_tokens=50):
+        needed_summary=False
+        while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > trigger_token_limit:
+            needed_summary=True
             print(conversation.get_conversation_token_count())
             await conversation.run_summarizer()
             new_messages = []
@@ -92,7 +94,7 @@ class Repository:
             for message in reversed(conversation.conversation_history):
                 new_messages.insert(0, message)
                 total_tokens += message.get_number_of_tokens()
-                if total_tokens > 50:
+                if total_tokens > conversation_window_tokens:
                     break
             conversation.conversation_history = new_messages
             conversation.sync_busy_history()
@@ -101,6 +103,7 @@ class Repository:
             Repository.clear_messages(Repository.get_db_path(conversation.conversation_id))
             for message in conversation.conversation_history:
                 Repository.save_message(Repository.get_db_path(conversation.conversation_id), message.sender, message.content)
+        return needed_summary
 
 
     def get_db_path(channel_id):

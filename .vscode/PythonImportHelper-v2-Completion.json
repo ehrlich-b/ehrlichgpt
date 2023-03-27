@@ -360,7 +360,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    discord_name = 'EhrlichGPT'\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",",
+        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",\n        discord_name=DISCORD_NAME,",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "DISCORD_NAME",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "DISCORD_NAME = 'EhrlichGPT'\ndef clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",",
         "detail": "main",
         "documentation": {}
     },
