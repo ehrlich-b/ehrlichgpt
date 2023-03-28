@@ -2,6 +2,7 @@
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.chains import OpenAIModerationChain
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
@@ -11,10 +12,12 @@ from langchain.prompts.chat import (
 from utils import Utils
 
 class Message:
-    def __init__(self, sender, content):
+    CENSORED = '[Text removed due to content policy violation]'
+    def __init__(self, sender, content, gpt_version_requested=3):
         self.sender = sender
         self.content = content
         self.token_count = 0
+        self.gpt_version_requested = gpt_version_requested
 
     def get_prompt_template(self):
         if self.sender == "ai":
@@ -39,3 +42,13 @@ class Message:
             llm = ChatOpenAI()
             self.token_count = llm.get_num_tokens(self.content)
         return self.token_count
+
+    @staticmethod
+    def violates_content_policy(text):
+        moderation_chain = OpenAIModerationChain(error=True)
+        try:
+            moderation_chain.run(text)
+            return False
+        except:
+            return True
+

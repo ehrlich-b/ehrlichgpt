@@ -92,8 +92,11 @@ class Repository:
             new_messages = []
             total_tokens = 0
             for message in reversed(conversation.conversation_history):
+                potential_total_tokens = total_tokens + message.get_number_of_tokens()
+                if potential_total_tokens > trigger_token_limit:
+                    break
                 new_messages.insert(0, message)
-                total_tokens += message.get_number_of_tokens()
+                total_tokens = potential_total_tokens
                 if total_tokens > conversation_window_tokens:
                     break
             conversation.conversation_history = new_messages

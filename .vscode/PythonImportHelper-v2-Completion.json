@@ -60,6 +60,22 @@
         "documentation": {}
     },
     {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
         "label": "ChatOpenAI",
         "importPath": "langchain.chat_models",
         "description": "langchain.chat_models",
@@ -101,6 +117,22 @@
     },
     {
         "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain.chains",
+        "description": "langchain.chains",
+        "isExtraImport": true,
+        "detail": "langchain.chains",
+        "documentation": {}
+    },
+    {
+        "label": "OpenAIModerationChain",
         "importPath": "langchain.chains",
         "description": "langchain.chains",
         "isExtraImport": true,
@@ -255,6 +287,15 @@
         "documentation": {}
     },
     {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
         "label": "sqlite3",
         "kind": 6,
         "isExtraImport": true,
@@ -360,7 +401,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",\n        discord_name=DISCORD_NAME,",
+        "peekOfCode": "def clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    response = await chain.arun(\n        discord_name=DISCORD_NAME,\n        discord_context=discord_context,",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "get_chat_llm",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_chat_llm(temperature=0.9, max_tokens=500, gpt_version=3):\n    if gpt_version == 4:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')\n    else:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)\n    return chat_llm\ndiscord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)",
         "detail": "main",
         "documentation": {}
     },
@@ -369,7 +419,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "DISCORD_NAME = 'EhrlichGPT'\ndef clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    response = await chain.arun(\n        name=\"Bryan Ehrlich\",",
+        "peekOfCode": "DISCORD_NAME = 'EhrlichGPT'\ndef clean_up_response(discord_name, original_response):\n    if original_response.startswith(discord_name + \":\"):\n        original_response = original_response[len(discord_name + \":\"):]\n    elif original_response.startswith(\"AI:\"):\n        original_response = original_response[len(\"AI:\"):]\n    return original_response.strip()\nasync def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):\n    response = await chain.arun(\n        discord_name=DISCORD_NAME,",
         "detail": "main",
         "documentation": {}
     },
@@ -432,7 +482,7 @@
         "kind": 6,
         "importPath": "message",
         "description": "message",
-        "peekOfCode": "class Message:\n    def __init__(self, sender, content):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n    def get_prompt_template(self):\n        if self.sender == \"ai\":\n            message_prompt = AIMessagePromptTemplate(\n                prompt=PromptTemplate(\n                    template=Utils.escape_prompt_content(self.content),",
+        "peekOfCode": "class Message:\n    CENSORED = '[Text removed due to content policy violation]'\n    def __init__(self, sender, content, gpt_version_requested=3):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n        self.gpt_version_requested = gpt_version_requested\n    def get_prompt_template(self):\n        if self.sender == \"ai\":\n            message_prompt = AIMessagePromptTemplate(",
         "detail": "message",
         "documentation": {}
     },
@@ -450,7 +500,7 @@
         "kind": 6,
         "importPath": "utils",
         "description": "utils",
-        "peekOfCode": "class Utils:\n    def escape_prompt_content(content):\n        return content.replace('{', '{{').replace('}', '}}')",
+        "peekOfCode": "class Utils:\n    def escape_prompt_content(content):\n        return content.replace('{', '{{').replace('}', '}}')\n    async def scold():\n        feelings_list = [\n            \"sadness\",\n            \"angry\",\n            \"fear\",\n            \"surprise\",\n            \"chest pain\",",
         "detail": "utils",
         "documentation": {}
     }

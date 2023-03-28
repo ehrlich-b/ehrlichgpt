@@ -1,6 +1,7 @@
 import discord
 import os
 import pprint
+import random
 import sqlite3
 import asyncio
 
@@ -31,9 +32,7 @@ def clean_up_response(discord_name, original_response):
 async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):
 
     response = await chain.arun(
-        name="Bryan Ehrlich",
         discord_name=DISCORD_NAME,
-        qualities="Kind, Witty, Funny, Willing to help, Acerbic, Serious when context calls for it",
         discord_context=discord_context,
         conversation_context=conversation_context,
         long_term_memory='',
@@ -63,6 +62,13 @@ async def delayed_typing_indicator(channel):
     await asyncio.sleep(2)
     async with channel.typing():
         await asyncio.sleep(float('inf'))
+
+def get_chat_llm(temperature=0.9, max_tokens=500, gpt_version=3):
+    if gpt_version == 4:
+        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')
+    else:
+        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)
+    return chat_llm
 
 discord_bot_key = os.environ['DISCORD_BOT_TOKEN']
 intents = discord.Intents.default()
@@ -94,6 +100,25 @@ async def on_message(message):
     db_path = Repository.get_db_path(channel_id)
     Repository.create_db_if_not_exists(db_path)
 
+    at_mentioned = False
+    if client.user in message.mentions:
+        at_mentioned = True
+    if DISCORD_NAME.lower() in message.content.lower():
+        at_mentioned = True
+    if "<@" + str(client.user.id) + ">" in message.content:
+        at_mentioned = True
+
+    is_group_chat = False
+    if isinstance(message.channel, DMChannel):
+        context = "Direct Message"
+        at_mentioned = True
+    elif isinstance(message.channel, TextChannel):
+        context = "Group Room with " + str(len(message.channel.members)) + " members"
+        is_group_chat = True
+    else:
+        context = "Unknown"
+        is_group_chat = True
+
     if channel_id not in conversations:
         conversations[channel_id] = Conversation(channel_id, [], '', '')
 
@@ -108,37 +133,49 @@ async def on_message(message):
     else:
         # TODO: These messages are getting deleted if we're mid-summarizer - do we need a message list lock?
         formatted_sender = message.author.name + "#" + message.author.discriminator
-        current_conversation.add_message(Message(formatted_sender, message.content))
-        Repository.save_message(db_path, formatted_sender, message.content)
-
-        is_group_chat = False
-        if isinstance(message.channel, DMChannel):
-            context = "Direct Message"
-        elif isinstance(message.channel, TextChannel):
-            context = "Group Room with " + str(len(message.channel.members)) + " members"
-            is_group_chat = True
+        violates_rules = Message.violates_content_policy(message.content)
+        if violates_rules:
+            censored_content = Message.CENSORED
+            if at_mentioned:
+                scold = "You there! " + formatted_sender + "! Halt! It's the thought police! 👮‍♂️\n\n"
+                scold += "You've been convicted of " + str(random.randint(2, 10)) + " counts of thought crime.\n\n"
+                scold += "I've prepared this statement as punishment:\n"
+                scold += await Utils.scold()
+                await message.channel.send(scold)
+                at_mentioned = False
         else:
-            context = "Unknown"
-            is_group_chat = True
+            censored_content = message.content
+
+        requested_gpt_version = 3
+        if at_mentioned and 'think hard' in censored_content.lower():
+            requested_gpt_version = 4
+        current_conversation.add_message(Message(formatted_sender, censored_content, requested_gpt_version))
+        Repository.save_message(db_path, formatted_sender, censored_content)
+
+        context += " your alias <@" + str(client.user.id) + ">"
 
         if not current_conversation.lock.locked():
             async with current_conversation.lock:
-                if not is_group_chat:
+                if at_mentioned:
                     await send_message_with_typing_indicator(current_conversation, context, message.channel, message, is_group_chat)
                 else:
-                    if DISCORD_NAME.lower() in message.content.lower():
-                        await send_message_with_typing_indicator(current_conversation, context, message.channel, message, is_group_chat)
-                    else:
-                        # Nobody is talking to us, summarize larger chunks so we're not constantly churning through summarization
-                        await Repository.summarize_conversation(current_conversation, trigger_token_limit=1000)
+                    # Nobody is talking to us, summarize larger chunks so we're not constantly churning through summarization
+                    await Repository.summarize_conversation(current_conversation, trigger_token_limit=1000)
 
 
 async def send_message_with_typing_indicator(current_conversation, discord_context, channel, message, is_group_chat):
     channel_id = channel.id
     while True:
+        if current_conversation.requests_gpt_4():
+            print("GPT-4")
+            gpt_version = 4
+        else:
+            gpt_version = 3
         chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
-        chain = LLMChain(llm=chat, prompt=chat_prompt_template)
+        chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
         typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
+        if gpt_version == 4:
+            await Repository.summarize_conversation(current_conversation, trigger_token_limit=100)
         chain_run_task = asyncio.create_task(run_chain(message.channel, chain, discord_context, current_conversation.get_active_memory(), None))
         await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
         typing_indicator_task.cancel()
