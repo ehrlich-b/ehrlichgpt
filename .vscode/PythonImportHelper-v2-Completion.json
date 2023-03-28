@@ -410,7 +410,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_chat_llm(temperature=0.9, max_tokens=500, gpt_version=3):\n    if gpt_version == 4:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')\n    else:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)\n    return chat_llm\ndiscord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)",
+        "peekOfCode": "def get_chat_llm(temperature=0.9, max_tokens=500, gpt_version=3):\n    if gpt_version == 4:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')\n    else:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)\n    return chat_llm\ndiscord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False",
         "detail": "main",
         "documentation": {}
     },
@@ -428,7 +428,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
+        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)",
         "detail": "main",
         "documentation": {}
     },
@@ -437,7 +437,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):",
+        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event",
         "detail": "main",
         "documentation": {}
     },
@@ -446,7 +446,25 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents.message_content = True\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":",
+        "peekOfCode": "intents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "paused",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "paused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "admin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":",
         "detail": "main",
         "documentation": {}
     },

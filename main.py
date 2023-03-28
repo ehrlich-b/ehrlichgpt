@@ -73,6 +73,10 @@ def get_chat_llm(temperature=0.9, max_tokens=500, gpt_version=3):
 discord_bot_key = os.environ['DISCORD_BOT_TOKEN']
 intents = discord.Intents.default()
 intents.message_content = True
+paused = False
+
+# TODO: Make this configurable
+admin = 'adotout#7295'
 
 client = discord.Client(intents=intents)
 
@@ -95,11 +99,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global paused, conversations
     pprint.pprint(message)
     channel_id = message.channel.id
     db_path = Repository.get_db_path(channel_id)
     Repository.create_db_if_not_exists(db_path)
-
+    formatted_sender = message.author.name + "#" + message.author.discriminator
     at_mentioned = False
     if client.user in message.mentions:
         at_mentioned = True
@@ -119,6 +124,20 @@ async def on_message(message):
         context = "Unknown"
         is_group_chat = True
 
+    if paused:
+        if at_mentioned and not message.author == client.user:
+            if formatted_sender == admin and 'unpause' in message.content.lower():
+                paused = False
+                await message.channel.send("I'm back, baby! 🤖")
+            else:
+                await message.channel.send("I've been paused, Bryan probably looked at the bill. 😅")
+        return
+    else:
+        if formatted_sender == admin and 'pause' in message.content.lower():
+            paused = True
+            await message.channel.send("Bye 😴")
+            return
+
     if channel_id not in conversations:
         conversations[channel_id] = Conversation(channel_id, [], '', '')
 
@@ -131,8 +150,6 @@ async def on_message(message):
             await Repository.summarize_conversation(current_conversation)
         return
     else:
-        # TODO: These messages are getting deleted if we're mid-summarizer - do we need a message list lock?
-        formatted_sender = message.author.name + "#" + message.author.discriminator
         violates_rules = Message.violates_content_policy(message.content)
         if violates_rules:
             censored_content = Message.CENSORED
