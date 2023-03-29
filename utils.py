@@ -1,11 +1,45 @@
 import random
+import tiktoken
+
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
+from langchain.text_splitter import TokenTextSplitter
 
 class Utils:
     def escape_prompt_content(content):
         return content.replace('{', '{{').replace('}', '}}')
+
+    def truncate_text(text: str, n_tokens: int, direction: int=1) -> str:
+        if n_tokens < 1:
+            raise ValueError("n_tokens must be greater than 0")
+
+        # Split the text into tokens
+        tokens = Utils.tokenize_text(text)
+        print(len(tokens))
+
+        # Keep the first N tokens and join them
+        if direction > 0:
+            truncated_tokens = tokens[:n_tokens]
+        else:
+            truncated_tokens = tokens[-n_tokens:]
+        truncated_text = ''.join(truncated_tokens)
+
+        # Add the "[TRUNCATED]" suffix if needed
+        if len(tokens) > n_tokens:
+            if direction < 0:
+                truncated_text += "[TRUNCATED]..."
+            else:
+                truncated_text += "...[TRUNCATED]"
+
+        return truncated_text
+
+    def tokenize_text(text: str) -> list:
+        tokenizer = tiktoken.get_encoding('gpt2')
+        tokens = tokenizer.encode(text)
+
+        return [tokenizer.decode([token]) for token in tokens]
+
 
     async def scold():
         feelings_list = [

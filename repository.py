@@ -83,7 +83,7 @@ class Repository:
         return conversation
 
     @staticmethod
-    async def summarize_conversation(conversation, trigger_token_limit=400, conversation_window_tokens=50):
+    async def summarize_conversation(conversation, trigger_token_limit=400, conversation_window_tokens=200):
         needed_summary=False
         while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > trigger_token_limit:
             needed_summary=True

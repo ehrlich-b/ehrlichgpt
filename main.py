@@ -30,36 +30,18 @@ def clean_up_response(discord_name, original_response):
     return original_response.strip()
 
 async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):
-
     response = await chain.arun(
         discord_name=DISCORD_NAME,
         discord_context=discord_context,
         conversation_context=conversation_context,
         long_term_memory='',
     )
-    response = clean_up_response(DISCORD_NAME, response)
-    if response.startswith('PASS'):
-        print('Bot declined to respond')
-        return
-    elif response.startswith('MEMORY'):
-        # TODO: Make memory actually do something first
-        pass
-        # response = await chain.arun(
-        #     name="Bryan Ehrlich",
-        #     discord_name=discord_name,
-        #     qualities="Kind, Witty, Funny, Willing to help, Acerbic, Serious when context calls for it",
-        #     discord_context=discord_context,
-        #     conversation_context=conversation_context,
-        #     long_term_memory=long_term_memory,
-        # )
 
     response = clean_up_response(DISCORD_NAME, response)
     await channel.send(response)
 
-
-
-async def delayed_typing_indicator(channel):
-    await asyncio.sleep(2)
+async def delayed_typing_indicator(channel, delay=2):
+    await asyncio.sleep(delay)
     async with channel.typing():
         await asyncio.sleep(float('inf'))
 
@@ -144,10 +126,13 @@ async def on_message(message):
     current_conversation = conversations[channel_id]
     if message.author == client.user:
         # Add our own AI message to conversation
-        current_conversation.add_message(Message("ai", message.content))
-        Repository.save_message(db_path, "ai", message.content)
+        truncated_content = Utils.truncate_text(message.content, 100)
+        current_conversation.add_message(Message("ai", truncated_content))
+        Repository.save_message(db_path, "ai", truncated_content)
         async with current_conversation.lock:
-            await Repository.summarize_conversation(current_conversation)
+            # We're responding, so we're being talked to, we don't want to constantly summarize, but we also
+            # don't want to re-submit huge history in prompts, so 500? Idk
+            await Repository.summarize_conversation(current_conversation, trigger_token_limit=500)
         return
     else:
         violates_rules = Message.violates_content_policy(message.content)
@@ -192,7 +177,8 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
         typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
         if gpt_version == 4:
-            await Repository.summarize_conversation(current_conversation, trigger_token_limit=100)
+            # Force a summarization, so if we haven't been summoned in awhile we don't submit 1000 tokens to gpt-4
+            await Repository.summarize_conversation(current_conversation, trigger_token_limit=300)
         chain_run_task = asyncio.create_task(run_chain(message.channel, chain, discord_context, current_conversation.get_active_memory(), None))
         await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
         typing_indicator_task.cancel()

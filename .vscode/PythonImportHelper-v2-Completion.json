@@ -244,6 +244,30 @@
         "documentation": {}
     },
     {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "Utils",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
         "label": "discord",
         "kind": 6,
         "isExtraImport": true,
@@ -345,19 +369,20 @@
         "documentation": {}
     },
     {
-        "label": "Utils",
-        "importPath": "utils",
-        "description": "utils",
+        "label": "tiktoken",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "utils",
+        "importPath": "tiktoken",
+        "description": "tiktoken",
+        "detail": "tiktoken",
         "documentation": {}
     },
     {
-        "label": "Utils",
-        "importPath": "utils",
-        "description": "utils",
+        "label": "TokenTextSplitter",
+        "importPath": "langchain.text_splitter",
+        "description": "langchain.text_splitter",
         "isExtraImport": true,
-        "detail": "utils",
+        "detail": "langchain.text_splitter",
         "documentation": {}
     },
     {
@@ -392,7 +417,7 @@
         "kind": 6,
         "importPath": "conversation",
         "description": "conversation",
-        "peekOfCode": "class Conversation:\n    TOKEN_WINDOW_SIZE = 500\n    def __init__(self, conversation_id, conversation_history, active_memory, long_term_memory) -> None:\n        self.conversation_id = conversation_id\n        self.conversation_history = conversation_history\n        self.busy_history = []\n        self.lock = asyncio.Lock()\n        self.active_memory = active_memory\n        self.long_term_memory = long_term_memory\n    def add_message(self, message):",
+        "peekOfCode": "class Conversation:\n    TOKEN_WINDOW_SIZE = 500\n    SUMMARY_WINDOW_SIZE = 15\n    SUMMARIZER_PROMPT_TEMPLATE = \"\"\"Summarize the lines of a discord chat you've been provided as succinctly as possible.\nIt's critical that your response be formatted as a csv, otherwise it will not be accepted.\nEXAMPLE:\nLines:\nbobjones#1234: I'm asking for rice\nalice#1111: I'm hungry too, I want rice\nalvin#4321: AI make me a song",
         "detail": "conversation",
         "documentation": {}
     },
@@ -518,7 +543,7 @@
         "kind": 6,
         "importPath": "utils",
         "description": "utils",
-        "peekOfCode": "class Utils:\n    def escape_prompt_content(content):\n        return content.replace('{', '{{').replace('}', '}}')\n    async def scold():\n        feelings_list = [\n            \"sadness\",\n            \"angry\",\n            \"fear\",\n            \"surprise\",\n            \"chest pain\",",
+        "peekOfCode": "class Utils:\n    def escape_prompt_content(content):\n        return content.replace('{', '{{').replace('}', '}}')\n    def truncate_text(text: str, n_tokens: int, direction: int=1) -> str:\n        if n_tokens < 1:\n            raise ValueError(\"n_tokens must be greater than 0\")\n        # Split the text into tokens\n        tokens = Utils.tokenize_text(text)\n        print(len(tokens))\n        # Keep the first N tokens and join them",
         "detail": "utils",
         "documentation": {}
     }
