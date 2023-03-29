@@ -65,13 +65,13 @@ Summary:"""
     def sync_busy_history(self):
         if (len(self.busy_history) == 0):
             return False
-        saw_human = False
+        summoned = False
         for message in self.busy_history:
-            if message.sender != "ai":
-                saw_human = True
+            if message.at_mentioned:
+                summoned = True
         self.conversation_history += self.busy_history
         self.busy_history = []
-        return saw_human
+        return summoned
 
     async def run_summarizer(self):
         prompt_template = self.SUMMARIZER_PROMPT_TEMPLATE

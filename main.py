@@ -151,7 +151,7 @@ async def on_message(message):
         requested_gpt_version = 3
         if at_mentioned and 'think hard' in censored_content.lower():
             requested_gpt_version = 4
-        current_conversation.add_message(Message(formatted_sender, censored_content, requested_gpt_version))
+        current_conversation.add_message(Message(formatted_sender, censored_content, requested_gpt_version, at_mentioned))
         Repository.save_message(db_path, formatted_sender, censored_content)
 
         context += " your alias <@" + str(client.user.id) + ">"
@@ -159,13 +159,13 @@ async def on_message(message):
         if not current_conversation.lock.locked():
             async with current_conversation.lock:
                 if at_mentioned:
-                    await send_message_with_typing_indicator(current_conversation, context, message.channel, message, is_group_chat)
+                    await send_message_with_typing_indicator(current_conversation, context, message.channel, message)
                 else:
                     # Nobody is talking to us, summarize larger chunks so we're not constantly churning through summarization
                     await Repository.summarize_conversation(current_conversation, trigger_token_limit=1000)
 
 
-async def send_message_with_typing_indicator(current_conversation, discord_context, channel, message, is_group_chat):
+async def send_message_with_typing_indicator(current_conversation, discord_context, channel, message):
     channel_id = channel.id
     while True:
         if current_conversation.requests_gpt_4():
@@ -182,7 +182,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         chain_run_task = asyncio.create_task(run_chain(message.channel, chain, discord_context, current_conversation.get_active_memory(), None))
         await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
         typing_indicator_task.cancel()
-        if not current_conversation.sync_busy_history() or is_group_chat:
+        if not current_conversation.sync_busy_history():
             break
 
 client.run(discord_bot_key)

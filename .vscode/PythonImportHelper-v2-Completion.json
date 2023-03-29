@@ -525,7 +525,7 @@
         "kind": 6,
         "importPath": "message",
         "description": "message",
-        "peekOfCode": "class Message:\n    CENSORED = '[Text removed due to content policy violation]'\n    def __init__(self, sender, content, gpt_version_requested=3):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n        self.gpt_version_requested = gpt_version_requested\n    def get_prompt_template(self):\n        if self.sender == \"ai\":\n            message_prompt = AIMessagePromptTemplate(",
+        "peekOfCode": "class Message:\n    CENSORED = '[Text removed due to content policy violation]'\n    def __init__(self, sender, content, gpt_version_requested=3, at_mentioned=False):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n        self.gpt_version_requested = gpt_version_requested\n        self.at_mentioned = at_mentioned\n    def get_prompt_template(self):\n        if self.sender == \"ai\":",
         "detail": "message",
         "documentation": {}
     },

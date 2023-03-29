@@ -13,11 +13,12 @@ from utils import Utils
 
 class Message:
     CENSORED = '[Text removed due to content policy violation]'
-    def __init__(self, sender, content, gpt_version_requested=3):
+    def __init__(self, sender, content, gpt_version_requested=3, at_mentioned=False):
         self.sender = sender
         self.content = content
         self.token_count = 0
         self.gpt_version_requested = gpt_version_requested
+        self.at_mentioned = at_mentioned
 
     def get_prompt_template(self):
         if self.sender == "ai":
