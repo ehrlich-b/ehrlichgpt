@@ -1,8 +1,10 @@
 import os
 import sqlite3
+
 from conversation import Conversation
 from message import Message
-from langchain.chat_models import ChatOpenAI
+
+
 class Repository:
     def create_db_if_not_exists(db_path):
         conn = sqlite3.connect(db_path)

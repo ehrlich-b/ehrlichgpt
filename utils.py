@@ -1,10 +1,10 @@
 import random
-import tiktoken
 
-from langchain.prompts import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+import tiktoken
 from langchain.chains import LLMChain
-from langchain.text_splitter import TokenTextSplitter
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate
+
 
 class Utils:
     def escape_prompt_content(content):

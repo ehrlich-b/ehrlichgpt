@@ -1,14 +1,13 @@
 import asyncio
-from langchain.prompts import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+
 from langchain.chains import LLMChain
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from langchain.prompts.chat import (HumanMessagePromptTemplate,
+                                    SystemMessagePromptTemplate)
+
 from utils import Utils
+
 
 class Conversation:
     TOKEN_WINDOW_SIZE = 500

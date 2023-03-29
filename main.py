@@ -1,23 +1,17 @@
-import discord
+import asyncio
 import os
 import pprint
 import random
-import sqlite3
-import asyncio
 
-from langchain.prompts import PromptTemplate
+import discord
+from discord import DMChannel, TextChannel
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
-from discord import (DMChannel, TextChannel)
+from langchain.prompts.chat import ChatPromptTemplate
+
 from conversation import Conversation
-from repository import Repository
 from message import Message
+from repository import Repository
 from utils import Utils
 
 DISCORD_NAME = 'EhrlichGPT'
