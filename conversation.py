@@ -6,7 +6,7 @@ from langchain.prompts import PromptTemplate
 from langchain.prompts.chat import (HumanMessagePromptTemplate,
                                     SystemMessagePromptTemplate)
 
-from utils import Utils
+from utils import truncate_text
 
 
 class Conversation:
@@ -90,7 +90,7 @@ Summary:"""
         if len(current_memory) > self.SUMMARY_WINDOW_SIZE:
             current_memory = current_memory[-self.SUMMARY_WINDOW_SIZE:]
         print(current_memory)
-        self.active_memory = Utils.truncate_text(','.join(current_memory), 1000, -1)
+        self.active_memory = truncate_text(','.join(current_memory), 1000, -1)
 
     # TODO: Currently this is just an idea, unusued. I'm learning from the summarizer, so tbd.
     async def run_long_term_memorizer(self):

@@ -4,7 +4,7 @@ from langchain.prompts import PromptTemplate
 from langchain.prompts.chat import (AIMessagePromptTemplate,
                                     HumanMessagePromptTemplate)
 
-from utils import Utils
+from utils import escape_prompt_content
 
 
 class Message:
@@ -20,14 +20,14 @@ class Message:
         if self.sender == "ai":
             message_prompt = AIMessagePromptTemplate(
                 prompt=PromptTemplate(
-                    template=Utils.escape_prompt_content(self.content),
+                    template=escape_prompt_content(self.content),
                     input_variables=[],
                 )
             )
         else:  # sender == "ai"
             message_prompt = HumanMessagePromptTemplate(
                 prompt=PromptTemplate(
-                    template=Utils.escape_prompt_content(self.sender + ": " + self.content),
+                    template=escape_prompt_content(self.sender + ": " + self.content),
                     input_variables=[],
                 )
             )
