@@ -51,7 +51,12 @@ Follow the steps found here https://python-poetry.org/docs/#installation to inst
     docker build . -t <imagename>:<tag>
     ```
 
-2. Run program
+2. Create a volume to persist conversations
     ```
-    docker run --env-file .env <imagename>:<tag>
+    docker volume create <some_vol_name>
+    ```
+
+3. Run program
+    ```
+    docker run --env-file .env -v <some_vol_name>:/app/conversations <imagename>:<tag>
     ```
