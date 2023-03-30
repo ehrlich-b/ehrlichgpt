@@ -1,24 +1,18 @@
-import discord
+import asyncio
 import os
 import pprint
 import random
-import sqlite3
-import asyncio
 
-from langchain.prompts import PromptTemplate
+import discord
+from discord import DMChannel, TextChannel
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
-from discord import (DMChannel, TextChannel)
+from langchain.prompts.chat import ChatPromptTemplate
+
 from conversation import Conversation
-from repository import Repository
 from message import Message
-from utils import Utils
+from repository import Repository
+from utils import scold, truncate_text
 
 DISCORD_NAME = 'EhrlichGPT'
 
@@ -75,17 +69,15 @@ async def on_ready():
             continue
         channel_db = os.path.splitext(db_file)[0]
         channel_id = int(channel_db.split('.')[0])
-        db_path = Repository.get_db_path(channel_id)
-        Repository.create_db_if_not_exists(db_path)
-        conversations[channel_id] = Repository.load_conversation(channel_id, db_path)
+        repository = Repository(channel_id)
+        conversations[channel_id] = repository.load_conversation(channel_id)
 
 @client.event
 async def on_message(message):
     global paused, conversations
     pprint.pprint(message)
     channel_id = message.channel.id
-    db_path = Repository.get_db_path(channel_id)
-    Repository.create_db_if_not_exists(db_path)
+    repository = Repository(channel_id)
     formatted_sender = message.author.name + "#" + message.author.discriminator
     at_mentioned = False
     if client.user in message.mentions:
@@ -126,24 +118,24 @@ async def on_message(message):
     current_conversation = conversations[channel_id]
     if message.author == client.user:
         # Add our own AI message to conversation
-        truncated_content = Utils.truncate_text(message.content, 100)
+        truncated_content = truncate_text(message.content, 100)
         current_conversation.add_message(Message("ai", truncated_content))
-        Repository.save_message(db_path, "ai", truncated_content)
+        repository.save_message("ai", truncated_content)
         async with current_conversation.lock:
             # We're responding, so we're being talked to, we don't want to constantly summarize, but we also
             # don't want to re-submit huge history in prompts, so 500? Idk
-            await Repository.summarize_conversation(current_conversation, trigger_token_limit=500)
+            await repository.summarize_conversation(current_conversation, trigger_token_limit=500)
         return
     else:
         violates_rules = Message.violates_content_policy(message.content)
         if violates_rules:
             censored_content = Message.CENSORED
             if at_mentioned:
-                scold = "You there! " + formatted_sender + "! Halt! It's the thought police! 👮‍♂️\n\n"
-                scold += "You've been convicted of " + str(random.randint(2, 10)) + " counts of thought crime.\n\n"
-                scold += "I've prepared this statement as punishment:\n"
-                scold += await Utils.scold()
-                await message.channel.send(scold)
+                scold_msg = "You there! " + formatted_sender + "! Halt! It's the thought police! 👮‍♂️\n\n"
+                scold_msg += "You've been convicted of " + str(random.randint(2, 10)) + " counts of thought crime.\n\n"
+                scold_msg += "I've prepared this statement as punishment:\n"
+                scold_msg += await scold()
+                await message.channel.send(scold_msg)
                 at_mentioned = False
         else:
             censored_content = message.content
@@ -152,7 +144,7 @@ async def on_message(message):
         if at_mentioned and 'think hard' in censored_content.lower():
             requested_gpt_version = 4
         current_conversation.add_message(Message(formatted_sender, censored_content, requested_gpt_version, at_mentioned))
-        Repository.save_message(db_path, formatted_sender, censored_content)
+        repository.save_message(formatted_sender, censored_content)
 
         context += " your alias <@" + str(client.user.id) + ">"
 
@@ -162,11 +154,12 @@ async def on_message(message):
                     await send_message_with_typing_indicator(current_conversation, context, message.channel, message)
                 else:
                     # Nobody is talking to us, summarize larger chunks so we're not constantly churning through summarization
-                    await Repository.summarize_conversation(current_conversation, trigger_token_limit=1000)
+                    await repository.summarize_conversation(current_conversation, trigger_token_limit=1000)
 
 
 async def send_message_with_typing_indicator(current_conversation, discord_context, channel, message):
     channel_id = channel.id
+    repository = Repository(channel_id)
     while True:
         if current_conversation.requests_gpt_4():
             print("GPT-4")
@@ -178,7 +171,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         typing_indicator_task = asyncio.create_task(delayed_typing_indicator(message.channel))
         if gpt_version == 4:
             # Force a summarization, so if we haven't been summoned in awhile we don't submit 1000 tokens to gpt-4
-            await Repository.summarize_conversation(current_conversation, trigger_token_limit=300)
+            await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
         chain_run_task = asyncio.create_task(run_chain(message.channel, chain, discord_context, current_conversation.get_active_memory(), None))
         await asyncio.wait([typing_indicator_task, chain_run_task], return_when=asyncio.FIRST_COMPLETED)
         typing_indicator_task.cancel()

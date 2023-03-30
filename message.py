@@ -1,15 +1,11 @@
-
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.chains import OpenAIModerationChain
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    SystemMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
-from utils import Utils
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from langchain.prompts.chat import (AIMessagePromptTemplate,
+                                    HumanMessagePromptTemplate)
+
+from utils import escape_prompt_content
+
 
 class Message:
     CENSORED = '[Text removed due to content policy violation]'
@@ -24,14 +20,14 @@ class Message:
         if self.sender == "ai":
             message_prompt = AIMessagePromptTemplate(
                 prompt=PromptTemplate(
-                    template=Utils.escape_prompt_content(self.content),
+                    template=escape_prompt_content(self.content),
                     input_variables=[],
                 )
             )
         else:  # sender == "ai"
             message_prompt = HumanMessagePromptTemplate(
                 prompt=PromptTemplate(
-                    template=Utils.escape_prompt_content(self.sender + ": " + self.content),
+                    template=escape_prompt_content(self.sender + ": " + self.content),
                     input_variables=[],
                 )
             )
