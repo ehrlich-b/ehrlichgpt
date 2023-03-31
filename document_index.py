@@ -13,7 +13,7 @@ class DocumentIndex:
         self.channel_id = channel_id
         self.repository = Repository(channel_id)
 
-    def add_message(self, message, unix_timestamp):
+    def add_message(self, message, unix_timestamp: int):
         if self.index is None:
             self.load_or_create_index()
 
@@ -48,7 +48,7 @@ class DocumentIndex:
                     total_token_count += memory.text_token_count
                     if total_token_count > token_threshold:
                         break
-                    results.append((distance, memory))
+                    results.append(memory)
 
         return results
 

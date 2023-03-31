@@ -63,6 +63,15 @@
         "documentation": {}
     },
     {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
         "label": "LLMChain",
         "importPath": "langchain.chains",
         "description": "langchain.chains",
@@ -207,15 +216,23 @@
         "documentation": {}
     },
     {
-        "label": "Message",
-        "importPath": "message",
-        "description": "message",
+        "label": "truncate_text",
+        "importPath": "utils",
+        "description": "utils",
         "isExtraImport": true,
-        "detail": "message",
+        "detail": "utils",
         "documentation": {}
     },
     {
-        "label": "truncate_text",
+        "label": "tokenize_text",
+        "importPath": "utils",
+        "description": "utils",
+        "isExtraImport": true,
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "format_discord_mentions",
         "importPath": "utils",
         "description": "utils",
         "isExtraImport": true,
@@ -260,6 +277,22 @@
         "description": "typing",
         "isExtraImport": true,
         "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "DocumentIndex",
+        "importPath": "document_index",
+        "description": "document_index",
+        "isExtraImport": true,
+        "detail": "document_index",
+        "documentation": {}
+    },
+    {
+        "label": "DocumentIndex",
+        "importPath": "document_index",
+        "description": "document_index",
+        "isExtraImport": true,
+        "detail": "document_index",
         "documentation": {}
     },
     {
@@ -314,14 +347,6 @@
         "documentation": {}
     },
     {
-        "label": "DocumentIndex",
-        "importPath": "document_index",
-        "description": "document_index",
-        "isExtraImport": true,
-        "detail": "document_index",
-        "documentation": {}
-    },
-    {
         "label": "pprint",
         "kind": 6,
         "isExtraImport": true,
@@ -362,14 +387,6 @@
         "description": "discord",
         "isExtraImport": true,
         "detail": "discord",
-        "documentation": {}
-    },
-    {
-        "label": "Conversation",
-        "importPath": "conversation",
-        "description": "conversation",
-        "isExtraImport": true,
-        "detail": "conversation",
         "documentation": {}
     },
     {
@@ -501,7 +518,7 @@
         "kind": 6,
         "importPath": "conversation",
         "description": "conversation",
-        "peekOfCode": "class Conversation:\n    TOKEN_WINDOW_SIZE = 500\n    SUMMARY_WINDOW_SIZE = 15\n    SUMMARIZER_PROMPT_TEMPLATE = \"\"\"Summarize the lines of a discord chat you've been provided as succinctly as possible.\nIt's critical that your response be formatted as a csv, otherwise it will not be accepted.\nEXAMPLE:\nLines:\nbobjones#1234: I'm asking for rice\nalice#1111: I'm hungry too, I want rice\nalvin#4321: AI make me a song",
+        "peekOfCode": "class Conversation:\n    TOKEN_WINDOW_SIZE = 400\n    ACTIVE_MEMORY_LOW_WATERMARK = 100\n    SUMMARY_WINDOW_SIZE = 15\n    SUMMARIZER_PROMPT_TEMPLATE = \"\"\"Summarize the following lines of a discord chat, focusing on the main actions, requests, or information. Newline chars have been replaced with '\\n'. Messages that do not contribute significant memorable information (i.e. exclamations, reactions unless they contain more info) can be excluded.\nEXAMPLE 1:\nLines:\nalex#1423: Haha!\\nWow!\nbobjones#1234: I'm asking for rice\nalice#1111: I'm hungry too, I want rice",
         "detail": "conversation",
         "documentation": {}
     },
@@ -510,7 +527,7 @@
         "kind": 6,
         "importPath": "document_index",
         "description": "document_index",
-        "peekOfCode": "class DocumentIndex:\n    INDEX_WINDOW = 10\n    TEXT_EMBEDDING_ADA_002_DIMENSION = 1536\n    def __init__(self, channel_id):\n        self.embeddings = OpenAIEmbeddings(model=\"text-embedding-ada-002\")\n        self.index = None\n        self.channel_id = channel_id\n        self.repository = Repository(channel_id)\n    def add_message(self, message, unix_timestamp):\n        if self.index is None:",
+        "peekOfCode": "class DocumentIndex:\n    INDEX_WINDOW = 10\n    TEXT_EMBEDDING_ADA_002_DIMENSION = 1536\n    def __init__(self, channel_id):\n        self.embeddings = OpenAIEmbeddings(model=\"text-embedding-ada-002\")\n        self.index = None\n        self.channel_id = channel_id\n        self.repository = Repository(channel_id)\n    def add_message(self, message, unix_timestamp: int):\n        if self.index is None:",
         "detail": "document_index",
         "documentation": {}
     },
@@ -537,7 +554,16 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_chat_llm(temperature=0.9, max_tokens=500, gpt_version=3):\n    if gpt_version == 4:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')\n    else:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)\n    return chat_llm\ndiscord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False",
+        "peekOfCode": "def get_chat_llm(temperature=0.8, max_tokens=500, gpt_version=3):\n    if gpt_version == 4:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')\n    else:\n        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)\n    return chat_llm\ndef load_conversation(channel_id):\n    repository = Repository(channel_id)\n    messages = repository.load_messages()\n    conversation_context = repository.load_conversation_context()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "load_conversation",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def load_conversation(channel_id):\n    repository = Repository(channel_id)\n    messages = repository.load_messages()\n    conversation_context = repository.load_conversation_context()\n    long_term_memory = ''\n    conversation = Conversation(channel_id, [], conversation_context, long_term_memory)\n    for sender, content in messages:\n        conversation.add_message(Message(sender, content, int(time.time())))\n    return conversation\ndiscord_bot_key = os.environ['DISCORD_BOT_TOKEN']",
         "detail": "main",
         "documentation": {}
     },
@@ -555,7 +581,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)",
+        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event",
         "detail": "main",
         "documentation": {}
     },
@@ -564,7 +590,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event",
+        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():",
         "detail": "main",
         "documentation": {}
     },
@@ -573,7 +599,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():",
+        "peekOfCode": "intents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
         "detail": "main",
         "documentation": {}
     },
@@ -582,7 +608,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "paused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
+        "peekOfCode": "paused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):",
         "detail": "main",
         "documentation": {}
     },
@@ -591,7 +617,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "admin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":",
+        "peekOfCode": "admin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue",
         "detail": "main",
         "documentation": {}
     },
@@ -600,7 +626,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "client = discord.Client(intents=intents)\nconversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue",
+        "peekOfCode": "client = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]",
         "detail": "main",
         "documentation": {}
     },
@@ -609,16 +635,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "conversations = {}\nchat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]",
-        "detail": "main",
-        "documentation": {}
-    },
-    {
-        "label": "chat",
-        "kind": 5,
-        "importPath": "main",
-        "description": "main",
-        "peekOfCode": "chat = ChatOpenAI(temperature=0.9, max_tokens=500)\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]\n        channel_id = int(channel_db.split('.')[0])",
+        "peekOfCode": "conversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]\n        channel_id = int(channel_db.split('.')[0])",
         "detail": "main",
         "documentation": {}
     },
@@ -636,7 +653,7 @@
         "kind": 6,
         "importPath": "message",
         "description": "message",
-        "peekOfCode": "class Message:\n    CENSORED = '[Text removed due to content policy violation]'\n    def __init__(self, sender, content, gpt_version_requested=3, at_mentioned=False):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n        self.gpt_version_requested = gpt_version_requested\n        self.at_mentioned = at_mentioned\n    def get_prompt_template(self):\n        if self.sender == \"ai\":",
+        "peekOfCode": "class Message:\n    CENSORED = '[Text removed due to content policy violation]'\n    def __init__(self, sender, content, timestamp, gpt_version_requested=3, at_mentioned=False):\n        self.sender = sender\n        self.content = content\n        self.token_count = 0\n        self.timestamp = timestamp\n        self.gpt_version_requested = gpt_version_requested\n        self.at_mentioned = at_mentioned\n    def get_prompt_template(self):",
         "detail": "message",
         "documentation": {}
     },
@@ -654,7 +671,7 @@
         "kind": 2,
         "importPath": "utils",
         "description": "utils",
-        "peekOfCode": "def escape_prompt_content(content: str) -> str:\n    return content.replace('{', '{{').replace('}', '}}')\ndef truncate_text(text: str, n_tokens: int, direction: int=1) -> str:\n    if n_tokens < 1:\n        raise ValueError(\"n_tokens must be greater than 0\")\n    # Split the text into tokens\n    tokens = tokenize_text(text)\n    print(len(tokens))\n    # Keep the first N tokens and join them\n    if direction > 0:",
+        "peekOfCode": "def escape_prompt_content(content: str) -> str:\n    return content.replace('{', '{{').replace('}', '}}')\ndef truncate_text(text: str, n_tokens: int, direction: int=1) -> str:\n    if n_tokens < 1:\n        raise ValueError(\"n_tokens must be greater than 0\")\n    # Split the text into tokens\n    tokens = tokenize_text(text)\n    # Keep the first N tokens and join them\n    if direction > 0:\n        truncated_tokens = tokens[:n_tokens]",
         "detail": "utils",
         "documentation": {}
     },
@@ -663,7 +680,7 @@
         "kind": 2,
         "importPath": "utils",
         "description": "utils",
-        "peekOfCode": "def truncate_text(text: str, n_tokens: int, direction: int=1) -> str:\n    if n_tokens < 1:\n        raise ValueError(\"n_tokens must be greater than 0\")\n    # Split the text into tokens\n    tokens = tokenize_text(text)\n    print(len(tokens))\n    # Keep the first N tokens and join them\n    if direction > 0:\n        truncated_tokens = tokens[:n_tokens]\n    else:",
+        "peekOfCode": "def truncate_text(text: str, n_tokens: int, direction: int=1) -> str:\n    if n_tokens < 1:\n        raise ValueError(\"n_tokens must be greater than 0\")\n    # Split the text into tokens\n    tokens = tokenize_text(text)\n    # Keep the first N tokens and join them\n    if direction > 0:\n        truncated_tokens = tokens[:n_tokens]\n    else:\n        truncated_tokens = tokens[-n_tokens:]",
         "detail": "utils",
         "documentation": {}
     },
@@ -672,7 +689,16 @@
         "kind": 2,
         "importPath": "utils",
         "description": "utils",
-        "peekOfCode": "def tokenize_text(text: str) -> list:\n    tokenizer = tiktoken.get_encoding('gpt2')\n    tokens = tokenizer.encode(text)\n    return [tokenizer.decode([token]) for token in tokens]\nasync def scold() -> str:\n    feelings_list = [\n        \"sadness\",\n        \"angry\",\n        \"fear\",\n        \"surprise\",",
+        "peekOfCode": "def tokenize_text(text: str) -> list:\n    tokenizer = tiktoken.get_encoding('gpt2')\n    tokens = tokenizer.encode(text)\n    return [tokenizer.decode([token]) for token in tokens]\ndef format_discord_mentions(message: discord.Message):\n    formatted_content = message.content\n    for mention in message.mentions:\n        formatted_mention = f'<@{mention.name}#{mention.discriminator}>'\n        formatted_content = formatted_content.replace(f'<@!{mention.id}>', formatted_mention)\n        formatted_content = formatted_content.replace(f'<@{mention.id}>', formatted_mention)",
+        "detail": "utils",
+        "documentation": {}
+    },
+    {
+        "label": "format_discord_mentions",
+        "kind": 2,
+        "importPath": "utils",
+        "description": "utils",
+        "peekOfCode": "def format_discord_mentions(message: discord.Message):\n    formatted_content = message.content\n    for mention in message.mentions:\n        formatted_mention = f'<@{mention.name}#{mention.discriminator}>'\n        formatted_content = formatted_content.replace(f'<@!{mention.id}>', formatted_mention)\n        formatted_content = formatted_content.replace(f'<@{mention.id}>', formatted_mention)\n    return formatted_content\nasync def scold() -> str:\n    feelings_list = [\n        \"sadness\",",
         "detail": "utils",
         "documentation": {}
     }

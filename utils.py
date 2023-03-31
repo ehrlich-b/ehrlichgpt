@@ -1,4 +1,5 @@
 import random
+import discord
 
 import tiktoken
 from langchain.chains import LLMChain
@@ -16,23 +17,14 @@ def truncate_text(text: str, n_tokens: int, direction: int=1) -> str:
 
     # Split the text into tokens
     tokens = tokenize_text(text)
-    print(len(tokens))
 
     # Keep the first N tokens and join them
     if direction > 0:
         truncated_tokens = tokens[:n_tokens]
     else:
         truncated_tokens = tokens[-n_tokens:]
-    truncated_text = ''.join(truncated_tokens)
 
-    # Add the "[TRUNCATED]" suffix if needed
-    if len(tokens) > n_tokens:
-        if direction < 0:
-            truncated_text += "[TRUNCATED]..."
-        else:
-            truncated_text += "...[TRUNCATED]"
-
-    return truncated_text
+    return ''.join(truncated_tokens)
 
 
 def tokenize_text(text: str) -> list:
@@ -41,6 +33,15 @@ def tokenize_text(text: str) -> list:
 
     return [tokenizer.decode([token]) for token in tokens]
 
+def format_discord_mentions(message: discord.Message):
+    formatted_content = message.content
+
+    for mention in message.mentions:
+        formatted_mention = f'<@{mention.name}#{mention.discriminator}>'
+        formatted_content = formatted_content.replace(f'<@!{mention.id}>', formatted_mention)
+        formatted_content = formatted_content.replace(f'<@{mention.id}>', formatted_mention)
+
+    return formatted_content
 
 async def scold() -> str:
     feelings_list = [

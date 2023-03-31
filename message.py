@@ -9,10 +9,11 @@ from utils import escape_prompt_content
 
 class Message:
     CENSORED = '[Text removed due to content policy violation]'
-    def __init__(self, sender, content, gpt_version_requested=3, at_mentioned=False):
+    def __init__(self, sender, content, timestamp, gpt_version_requested=3, at_mentioned=False):
         self.sender = sender
         self.content = content
         self.token_count = 0
+        self.timestamp = timestamp
         self.gpt_version_requested = gpt_version_requested
         self.at_mentioned = at_mentioned
 

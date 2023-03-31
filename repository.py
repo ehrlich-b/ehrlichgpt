@@ -1,11 +1,10 @@
 import os
 import sqlite3
+import time
 import faiss
 import numpy as np
 
-from conversation import Conversation
 from memory import Memory
-from message import Message
 
 
 class Repository:
@@ -35,7 +34,7 @@ class Repository:
     def save_long_term_memory(self, long_term_memory, unix_timestamp, serialized_embedding):
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO long_term_memory (timestamp, memory_text, embedding_serialized_csv_text) VALUES (?, ?, ?)", (unix_timestamp, long_term_memory, serialized_embedding))
+        cursor.execute("INSERT INTO long_term_memory_text (timestamp, memory_text, embedding_serialized_csv_text) VALUES (?, ?, ?)", (unix_timestamp, long_term_memory, serialized_embedding))
         memory_id = cursor.lastrowid
         conn.commit()
         conn.close()
@@ -61,19 +60,15 @@ class Repository:
 
     def load_memory(self, id):
         conn = sqlite3.connect(self.db_path)
-        print(self.db_path)
-        print("id type:", type(id))
-        cursor = conn.execute("SELECT id, memory_text, timestamp, embedding_serialized_csv_text FROM long_term_memory WHERE id=?", (id,))
+        cursor = conn.execute("SELECT id, memory_text, timestamp, embedding_serialized_csv_text FROM long_term_memory_text WHERE id=?", (id,))
         memory = cursor.fetchone()
-        print(id)
-        print(memory)
         conn.close()
         return Memory(memory[0], memory[1], memory[2], memory[3]) if memory else None
 
     # Load ordered embeddings ascending by id
     def load_embeddings(self):
         conn = sqlite3.connect(self.db_path)
-        cursor = conn.execute("SELECT embedding_serialized_csv_text FROM long_term_memory ORDER BY id ASC")
+        cursor = conn.execute("SELECT embedding_serialized_csv_text FROM long_term_memory_text ORDER BY id ASC")
         embeddings = cursor.fetchall()
         conn.close()
         return [list(map(float, embedding[0].split(','))) for embedding in embeddings]
@@ -99,20 +94,10 @@ class Repository:
         self.save_conversation_context(conversation.conversation_context)
         self.save_long_term_memory(conversation.long_term_memory)
 
-    def load_conversation(self, channel_id):
-        messages = self.load_messages()
-        conversation_context = self.load_conversation_context()
-        long_term_memory = ''
-        conversation = Conversation(channel_id, [], conversation_context, long_term_memory)
-        for sender, content in messages:
-            conversation.add_message(Message(sender, content))
-        return conversation
-
-    async def summarize_conversation(self, conversation, trigger_token_limit=400, conversation_window_tokens=200):
+    async def summarize_conversation(self, conversation, trigger_token_limit=400, conversation_window_tokens=100):
         needed_summary=False
         while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > trigger_token_limit:
             needed_summary=True
-            print(conversation.get_conversation_token_count())
             await conversation.run_summarizer()
             new_messages = []
             total_tokens = 0
@@ -145,7 +130,7 @@ class Repository:
         conn.execute('''CREATE TABLE IF NOT EXISTS conversation_context
                         (id INTEGER PRIMARY KEY AUTOINCREMENT,
                         context TEXT NOT NULL);''')
-        conn.execute('''CREATE TABLE IF NOT EXISTS long_term_memory (
+        conn.execute('''CREATE TABLE IF NOT EXISTS long_term_memory_text (
             id INTEGER PRIMARY KEY,
             timestamp INTEGER,
             memory_text TEXT,
