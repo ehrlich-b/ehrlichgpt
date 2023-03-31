@@ -8,9 +8,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 tiktoken = "^0.3.3"
-langchain = "0.0.123"
+langchain = "0.0.127"
 openai = "^0.27.2"
 discord = "^2.2.2"
+faiss-cpu = "^1.7.3"
+numpy = "^1.24.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.1.1"

@@ -5,8 +5,10 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.prompts.chat import (HumanMessagePromptTemplate,
                                     SystemMessagePromptTemplate)
+from message import Message
 
 from utils import truncate_text
+from typing import List
 
 
 class Conversation:
@@ -32,7 +34,7 @@ Summary:"""
     def __init__(self, conversation_id, conversation_history, active_memory, long_term_memory) -> None:
         self.conversation_id = conversation_id
         self.conversation_history = conversation_history
-        self.busy_history = []
+        self.busy_history: List[Message] = []
         self.lock = asyncio.Lock()
         self.active_memory = active_memory
         self.long_term_memory = long_term_memory
