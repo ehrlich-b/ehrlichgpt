@@ -1,8 +1,10 @@
 import os
 import sqlite3
+import time
+import faiss
+import numpy as np
 
-from conversation import Conversation
-from message import Message
+from memory import Memory
 
 
 class Repository:
@@ -29,12 +31,47 @@ class Repository:
         conn.commit()
         conn.close()
 
-    def save_long_term_memory(self, long_term_memory):
+    def save_long_term_memory(self, long_term_memory, unix_timestamp, serialized_embedding):
         conn = sqlite3.connect(self.db_path)
-        conn.execute("DELETE FROM long_term_memory")
-        conn.execute("INSERT INTO long_term_memory (memory) VALUES (?)", (long_term_memory,))
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO long_term_memory_text (timestamp, memory_text, embedding_serialized_csv_text) VALUES (?, ?, ?)", (unix_timestamp, long_term_memory, serialized_embedding))
+        memory_id = cursor.lastrowid
         conn.commit()
         conn.close()
+        return memory_id
+
+    def save_long_term_memory_index(self, faiss_index):
+        conn = sqlite3.connect(self.db_path)
+        conn.execute("DELETE FROM long_term_memory_index")
+        conn.execute("INSERT INTO long_term_memory_index (serialized_faiss_index) VALUES (?)", (faiss.serialize_index(faiss_index),))
+        conn.commit()
+        conn.close()
+
+    def load_long_term_memory_index(self):
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.execute("SELECT serialized_faiss_index FROM long_term_memory_index")
+        serialized_index = cursor.fetchone()
+        conn.close()
+        if serialized_index:
+            serialized_index_np = np.frombuffer(serialized_index[0], dtype=np.uint8)
+            return faiss.deserialize_index(serialized_index_np)
+        else:
+            return None
+
+    def load_memory(self, id):
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.execute("SELECT id, memory_text, timestamp, embedding_serialized_csv_text FROM long_term_memory_text WHERE id=?", (id,))
+        memory = cursor.fetchone()
+        conn.close()
+        return Memory(memory[0], memory[1], memory[2], memory[3]) if memory else None
+
+    # Load ordered embeddings ascending by id
+    def load_embeddings(self):
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.execute("SELECT embedding_serialized_csv_text FROM long_term_memory_text ORDER BY id ASC")
+        embeddings = cursor.fetchall()
+        conn.close()
+        return [list(map(float, embedding[0].split(','))) for embedding in embeddings]
 
     def load_messages(self):
         conn = sqlite3.connect(self.db_path)
@@ -50,13 +87,6 @@ class Repository:
         conn.close()
         return context[0] if context else ''
 
-    def load_long_term_memory(self):
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.execute("SELECT memory FROM long_term_memory")
-        memory = cursor.fetchone()
-        conn.close()
-        return memory[0] if memory else ''
-
     def sync_conversation_context(self, conversation):
         self.clear_messages()
         for message in conversation.messages:
@@ -64,20 +94,10 @@ class Repository:
         self.save_conversation_context(conversation.conversation_context)
         self.save_long_term_memory(conversation.long_term_memory)
 
-    def load_conversation(self, channel_id):
-        messages = self.load_messages()
-        conversation_context = self.load_conversation_context()
-        long_term_memory = self.load_long_term_memory()
-        conversation = Conversation(channel_id, [], conversation_context, long_term_memory)
-        for sender, content in messages:
-            conversation.add_message(Message(sender, content))
-        return conversation
-
-    async def summarize_conversation(self, conversation, trigger_token_limit=400, conversation_window_tokens=200):
+    async def summarize_conversation(self, conversation, trigger_token_limit=400, conversation_window_tokens=100):
         needed_summary=False
         while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > trigger_token_limit:
             needed_summary=True
-            print(conversation.get_conversation_token_count())
             await conversation.run_summarizer()
             new_messages = []
             total_tokens = 0
@@ -110,8 +130,16 @@ class Repository:
         conn.execute('''CREATE TABLE IF NOT EXISTS conversation_context
                         (id INTEGER PRIMARY KEY AUTOINCREMENT,
                         context TEXT NOT NULL);''')
-        conn.execute('''CREATE TABLE IF NOT EXISTS long_term_memory
-                        (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        memory TEXT NOT NULL);''')
+        conn.execute('''CREATE TABLE IF NOT EXISTS long_term_memory_text (
+            id INTEGER PRIMARY KEY,
+            timestamp INTEGER,
+            memory_text TEXT,
+            embedding_serialized_csv_text TEXT
+        )''')
+
+        conn.execute('''CREATE TABLE IF NOT EXISTS long_term_memory_index (
+            id INTEGER PRIMARY KEY,
+            serialized_faiss_index BLOB
+        )''')
         conn.commit()
         conn.close()
