@@ -96,7 +96,8 @@ class Repository:
 
     async def summarize_conversation(self, conversation, trigger_token_limit=400, conversation_window_tokens=100):
         needed_summary=False
-        while len(conversation.conversation_history) > 1 and conversation.get_conversation_token_count() > trigger_token_limit:
+        await conversation.lock.acquire()
+        try:
             needed_summary=True
             await conversation.run_summarizer()
             new_messages = []
@@ -110,12 +111,12 @@ class Repository:
                 if total_tokens > conversation_window_tokens:
                     break
             conversation.conversation_history = new_messages
-            conversation.sync_busy_history()
-            print(conversation.get_conversation_token_count())
             self.save_conversation_context(conversation.active_memory)
             self.clear_messages()
             for message in conversation.conversation_history:
                 self.save_message(message.sender, message.content)
+        finally:
+            conversation.lock.release()
         return needed_summary
 
     def __get_db_path(self, channel_id: int) -> str:

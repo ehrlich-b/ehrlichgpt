@@ -1,4 +1,6 @@
+from builtins import len, str
 import asyncio
+import discord
 import time
 
 from langchain.chains import LLMChain
@@ -62,25 +64,26 @@ Long-term memory:"""
     def __init__(self, conversation_id, conversation_history, active_memory, long_term_memory) -> None:
         self.conversation_id = conversation_id
         self.conversation_history = conversation_history
-        self.busy_history: List[Message] = []
         self.lock = asyncio.Lock()
+        self.queue: asyncio.Queue[discord.Message]= asyncio.Queue()
         self.active_memory = active_memory
         self.active_memory_tokens = len(tokenize_text(self.active_memory))
         self.memory_index = DocumentIndex(self.conversation_id)
         self.long_term_memory = long_term_memory
         self.memorizer_running = False
 
-    def add_message(self, message):
-        if self.lock.locked():
-            self.busy_history.append(message)
-        else:
-            self.conversation_history.append(message)
+    def enqueue_discord_message(self, message: discord.Message):
+        self.queue.put_nowait(message)
+
+    def add_message(self, message: Message):
+        self.conversation_history.append(message)
 
     def requests_gpt_4(self):
-        for message in self.conversation_history:
-            if message.gpt_version_requested == 4:
-                return True
-        return False
+        # Check if last message requested gpt-4 = 4
+        if len(self.conversation_history) == 0:
+            return False
+        last_message = self.conversation_history[-1]
+        return last_message.gpt_version_requested == 4
 
     def get_conversation_prompts(self):
         conversation = [Conversation.get_system_prompt_template()]
@@ -104,17 +107,6 @@ Long-term memory:"""
         memories += "END LONG TERM MEMORIES\n"
         print(memories)
         return memories
-
-    def sync_busy_history(self):
-        if (len(self.busy_history) == 0):
-            return False
-        summoned = False
-        for message in self.busy_history:
-            if message.at_mentioned:
-                summoned = True
-        self.conversation_history += self.busy_history
-        self.busy_history = []
-        return summoned
 
     async def commit_to_long_term_memory(self):
         async with self.lock:

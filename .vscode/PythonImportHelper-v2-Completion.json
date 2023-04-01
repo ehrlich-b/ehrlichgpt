@@ -54,12 +54,293 @@
         "documentation": {}
     },
     {
+        "label": "cast",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Set",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "BaseLLM",
+        "importPath": "langchain.llms.base",
+        "description": "langchain.llms.base",
+        "isExtraImport": true,
+        "detail": "langchain.llms.base",
+        "documentation": {}
+    },
+    {
+        "label": "initialize_agent",
+        "importPath": "langchain.agents",
+        "description": "langchain.agents",
+        "isExtraImport": true,
+        "detail": "langchain.agents",
+        "documentation": {}
+    },
+    {
+        "label": "Tool",
+        "importPath": "langchain.agents",
+        "description": "langchain.agents",
+        "isExtraImport": true,
+        "detail": "langchain.agents",
+        "documentation": {}
+    },
+    {
+        "label": "load_tools",
+        "importPath": "langchain.agents",
+        "description": "langchain.agents",
+        "isExtraImport": true,
+        "detail": "langchain.agents",
+        "documentation": {}
+    },
+    {
+        "label": "BaseTool",
+        "importPath": "langchain.tools",
+        "description": "langchain.tools",
+        "isExtraImport": true,
+        "detail": "langchain.tools",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
+        "documentation": {}
+    },
+    {
+        "label": "LLMChain",
+        "importPath": "langchain",
+        "description": "langchain",
+        "isExtraImport": true,
+        "detail": "langchain",
+        "documentation": {}
+    },
+    {
+        "label": "LLMMathChain",
+        "importPath": "langchain",
+        "description": "langchain",
+        "isExtraImport": true,
+        "detail": "langchain",
+        "documentation": {}
+    },
+    {
+        "label": "SerpAPIWrapper",
+        "importPath": "langchain",
+        "description": "langchain",
+        "isExtraImport": true,
+        "detail": "langchain",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "HumanMessage",
+        "importPath": "langchain.schema",
+        "description": "langchain.schema",
+        "isExtraImport": true,
+        "detail": "langchain.schema",
+        "documentation": {}
+    },
+    {
+        "label": "AIMessage",
+        "importPath": "langchain.schema",
+        "description": "langchain.schema",
+        "isExtraImport": true,
+        "detail": "langchain.schema",
+        "documentation": {}
+    },
+    {
+        "label": "len",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "str",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "Exception",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "int",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "isinstance",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "len",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "print",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "set",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "str",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
         "label": "asyncio",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "asyncio",
         "description": "asyncio",
         "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "discord",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "discord",
+        "description": "discord",
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "DMChannel",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
+        "documentation": {}
+    },
+    {
+        "label": "TextChannel",
+        "importPath": "discord",
+        "description": "discord",
+        "isExtraImport": true,
+        "detail": "discord",
         "documentation": {}
     },
     {
@@ -101,62 +382,6 @@
         "description": "langchain.chains",
         "isExtraImport": true,
         "detail": "langchain.chains",
-        "documentation": {}
-    },
-    {
-        "label": "ChatOpenAI",
-        "importPath": "langchain.chat_models",
-        "description": "langchain.chat_models",
-        "isExtraImport": true,
-        "detail": "langchain.chat_models",
-        "documentation": {}
-    },
-    {
-        "label": "ChatOpenAI",
-        "importPath": "langchain.chat_models",
-        "description": "langchain.chat_models",
-        "isExtraImport": true,
-        "detail": "langchain.chat_models",
-        "documentation": {}
-    },
-    {
-        "label": "ChatOpenAI",
-        "importPath": "langchain.chat_models",
-        "description": "langchain.chat_models",
-        "isExtraImport": true,
-        "detail": "langchain.chat_models",
-        "documentation": {}
-    },
-    {
-        "label": "ChatOpenAI",
-        "importPath": "langchain.chat_models",
-        "description": "langchain.chat_models",
-        "isExtraImport": true,
-        "detail": "langchain.chat_models",
-        "documentation": {}
-    },
-    {
-        "label": "PromptTemplate",
-        "importPath": "langchain.prompts",
-        "description": "langchain.prompts",
-        "isExtraImport": true,
-        "detail": "langchain.prompts",
-        "documentation": {}
-    },
-    {
-        "label": "PromptTemplate",
-        "importPath": "langchain.prompts",
-        "description": "langchain.prompts",
-        "isExtraImport": true,
-        "detail": "langchain.prompts",
-        "documentation": {}
-    },
-    {
-        "label": "PromptTemplate",
-        "importPath": "langchain.prompts",
-        "description": "langchain.prompts",
-        "isExtraImport": true,
-        "detail": "langchain.prompts",
         "documentation": {}
     },
     {
@@ -272,14 +497,6 @@
         "documentation": {}
     },
     {
-        "label": "List",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
         "label": "DocumentIndex",
         "importPath": "document_index",
         "description": "document_index",
@@ -347,6 +564,15 @@
         "documentation": {}
     },
     {
+        "label": "traceback",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "traceback",
+        "description": "traceback",
+        "detail": "traceback",
+        "documentation": {}
+    },
+    {
         "label": "pprint",
         "kind": 6,
         "isExtraImport": true,
@@ -362,31 +588,6 @@
         "importPath": "random",
         "description": "random",
         "detail": "random",
-        "documentation": {}
-    },
-    {
-        "label": "discord",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "discord",
-        "description": "discord",
-        "detail": "discord",
-        "documentation": {}
-    },
-    {
-        "label": "DMChannel",
-        "importPath": "discord",
-        "description": "discord",
-        "isExtraImport": true,
-        "detail": "discord",
-        "documentation": {}
-    },
-    {
-        "label": "TextChannel",
-        "importPath": "discord",
-        "description": "discord",
-        "isExtraImport": true,
-        "detail": "discord",
         "documentation": {}
     },
     {
@@ -514,6 +715,33 @@
         "documentation": {}
     },
     {
+        "label": "llm",
+        "kind": 5,
+        "importPath": "agent_tester",
+        "description": "agent_tester",
+        "peekOfCode": "llm = ChatOpenAI(temperature=0.0)\ntemplate=\"\"\"You are an information retrieval bot, you are given a discord chat message, and a set of tools. It is your job to select the proper information collection tools to respond to the message.\nTools format:\nTool['parameter']: Tool description (tools can be called multiple times with different parameters, 0-1 parameter per call)\nTools:\nShortTermMemory[]: Recent full text chat messages\nSummarizedMemory[]: Summarized short term memory, contains significantly more messages than fully inflated ShortTermMemory\nLongTermMemory[\"embedding_query\"]: Long term memory, parameter is the query to use, this will generate a query embedding and search for similar messages from chat history\nAnswer[]: You've collected all the data you need, and are ready to forward on to the answer synthesizer bot\nExample 1:",
+        "detail": "agent_tester",
+        "documentation": {}
+    },
+    {
+        "label": "prompt",
+        "kind": 5,
+        "importPath": "agent_tester",
+        "description": "agent_tester",
+        "peekOfCode": "prompt = PromptTemplate(\n    template=template,\n    input_variables=[\"message\"],\n)\nchain = LLMChain(llm=llm, prompt=prompt)\nprint (chain.run(message=\"adotout#1452: Ok, given everything that's been said, what do you think is the most logical conclusion?\"))",
+        "detail": "agent_tester",
+        "documentation": {}
+    },
+    {
+        "label": "chain",
+        "kind": 5,
+        "importPath": "agent_tester",
+        "description": "agent_tester",
+        "peekOfCode": "chain = LLMChain(llm=llm, prompt=prompt)\nprint (chain.run(message=\"adotout#1452: Ok, given everything that's been said, what do you think is the most logical conclusion?\"))",
+        "detail": "agent_tester",
+        "documentation": {}
+    },
+    {
         "label": "Conversation",
         "kind": 6,
         "importPath": "conversation",
@@ -581,7 +809,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event",
+        "peekOfCode": "discord_bot_key = os.environ['DISCORD_BOT_TOKEN']\nintents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nclient_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()",
         "detail": "main",
         "documentation": {}
     },
@@ -590,7 +818,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():",
+        "peekOfCode": "intents = discord.Intents.default()\nintents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nclient_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()\nos.makedirs(\"conversations\", exist_ok=True)",
         "detail": "main",
         "documentation": {}
     },
@@ -599,7 +827,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "intents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')",
+        "peekOfCode": "intents.message_content = True\npaused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nclient_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()\nos.makedirs(\"conversations\", exist_ok=True)\nasync def process_queue(conversation):",
         "detail": "main",
         "documentation": {}
     },
@@ -608,7 +836,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "paused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):",
+        "peekOfCode": "paused = False\n# TODO: Make this configurable\nadmin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nclient_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()\nos.makedirs(\"conversations\", exist_ok=True)\nasync def process_queue(conversation):\n    while True:",
         "detail": "main",
         "documentation": {}
     },
@@ -617,7 +845,7 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "admin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue",
+        "peekOfCode": "admin = 'adotout#7295'\nclient = discord.Client(intents=intents)\nclient_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()\nos.makedirs(\"conversations\", exist_ok=True)\nasync def process_queue(conversation):\n    while True:\n        try:\n            message = await conversation.queue.get()",
         "detail": "main",
         "documentation": {}
     },
@@ -626,16 +854,16 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "client = discord.Client(intents=intents)\nconversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]",
+        "peekOfCode": "client = discord.Client(intents=intents)\nclient_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()\nos.makedirs(\"conversations\", exist_ok=True)\nasync def process_queue(conversation):\n    while True:\n        try:\n            message = await conversation.queue.get()\n            await queue_on_message(message)",
         "detail": "main",
         "documentation": {}
     },
     {
-        "label": "conversations",
+        "label": "client_user",
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "conversations = {}\nos.makedirs(\"conversations\", exist_ok=True)\n@client.event\nasync def on_ready():\n    print(f'We have logged in as {client.user}')\n    for db_file in os.listdir(\"conversations\"):\n        if db_file == \".gitignore\":\n            continue\n        channel_db = os.path.splitext(db_file)[0]\n        channel_id = int(channel_db.split('.')[0])",
+        "peekOfCode": "client_user = None\nconversations: Dict[int, Conversation] = {}\nglobal_message_lock: asyncio.Lock = asyncio.Lock()\nos.makedirs(\"conversations\", exist_ok=True)\nasync def process_queue(conversation):\n    while True:\n        try:\n            message = await conversation.queue.get()\n            await queue_on_message(message)\n            conversation.queue.task_done()",
         "detail": "main",
         "documentation": {}
     },
