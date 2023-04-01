@@ -86,6 +86,38 @@
         "documentation": {}
     },
     {
+        "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "BaseLLM",
+        "importPath": "langchain.llms.base",
+        "description": "langchain.llms.base",
+        "isExtraImport": true,
+        "detail": "langchain.llms.base",
+        "documentation": {}
+    },
+    {
         "label": "BaseLLM",
         "importPath": "langchain.llms.base",
         "description": "langchain.llms.base",
@@ -118,11 +150,51 @@
         "documentation": {}
     },
     {
+        "label": "initialize_agent",
+        "importPath": "langchain.agents",
+        "description": "langchain.agents",
+        "isExtraImport": true,
+        "detail": "langchain.agents",
+        "documentation": {}
+    },
+    {
+        "label": "Tool",
+        "importPath": "langchain.agents",
+        "description": "langchain.agents",
+        "isExtraImport": true,
+        "detail": "langchain.agents",
+        "documentation": {}
+    },
+    {
+        "label": "load_tools",
+        "importPath": "langchain.agents",
+        "description": "langchain.agents",
+        "isExtraImport": true,
+        "detail": "langchain.agents",
+        "documentation": {}
+    },
+    {
         "label": "BaseTool",
         "importPath": "langchain.tools",
         "description": "langchain.tools",
         "isExtraImport": true,
         "detail": "langchain.tools",
+        "documentation": {}
+    },
+    {
+        "label": "BaseTool",
+        "importPath": "langchain.tools",
+        "description": "langchain.tools",
+        "isExtraImport": true,
+        "detail": "langchain.tools",
+        "documentation": {}
+    },
+    {
+        "label": "ChatOpenAI",
+        "importPath": "langchain.chat_models",
+        "description": "langchain.chat_models",
+        "isExtraImport": true,
+        "detail": "langchain.chat_models",
         "documentation": {}
     },
     {
@@ -190,11 +262,27 @@
         "documentation": {}
     },
     {
-        "label": "PromptTemplate",
-        "importPath": "langchain.prompts",
-        "description": "langchain.prompts",
+        "label": "LLMChain",
+        "importPath": "langchain",
+        "description": "langchain",
         "isExtraImport": true,
-        "detail": "langchain.prompts",
+        "detail": "langchain",
+        "documentation": {}
+    },
+    {
+        "label": "LLMMathChain",
+        "importPath": "langchain",
+        "description": "langchain",
+        "isExtraImport": true,
+        "detail": "langchain",
+        "documentation": {}
+    },
+    {
+        "label": "SerpAPIWrapper",
+        "importPath": "langchain",
+        "description": "langchain",
+        "isExtraImport": true,
+        "detail": "langchain",
         "documentation": {}
     },
     {
@@ -219,6 +307,38 @@
         "description": "langchain.prompts",
         "isExtraImport": true,
         "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "PromptTemplate",
+        "importPath": "langchain.prompts",
+        "description": "langchain.prompts",
+        "isExtraImport": true,
+        "detail": "langchain.prompts",
+        "documentation": {}
+    },
+    {
+        "label": "HumanMessage",
+        "importPath": "langchain.schema",
+        "description": "langchain.schema",
+        "isExtraImport": true,
+        "detail": "langchain.schema",
+        "documentation": {}
+    },
+    {
+        "label": "AIMessage",
+        "importPath": "langchain.schema",
+        "description": "langchain.schema",
+        "isExtraImport": true,
+        "detail": "langchain.schema",
         "documentation": {}
     },
     {
@@ -295,6 +415,14 @@
     },
     {
         "label": "set",
+        "importPath": "builtins",
+        "description": "builtins",
+        "isExtraImport": true,
+        "detail": "builtins",
+        "documentation": {}
+    },
+    {
+        "label": "str",
         "importPath": "builtins",
         "description": "builtins",
         "isExtraImport": true,
@@ -591,6 +719,14 @@
         "documentation": {}
     },
     {
+        "label": "MemoryRetriever",
+        "importPath": "memory_retriever",
+        "description": "memory_retriever",
+        "isExtraImport": true,
+        "detail": "memory_retriever",
+        "documentation": {}
+    },
+    {
         "label": "Conversation",
         "importPath": "conversation",
         "description": "conversation",
@@ -874,6 +1010,15 @@
         "description": "memory",
         "peekOfCode": "class Memory:\n    def __init__(self, id, memory_text, unix_timestamp, serialized_embedding):\n        self.id = id\n        self.memory_text = memory_text\n        self.unix_timestamp = unix_timestamp\n        self.serialized_embedding = serialized_embedding\n        self.text_token_count = -1\n    # Function that gets the token count of memory_text\n    def get_token_count(self):\n        if self.text_token_count == -1:",
         "detail": "memory",
+        "documentation": {}
+    },
+    {
+        "label": "MemoryRetriever",
+        "kind": 6,
+        "importPath": "memory_retriever",
+        "description": "memory_retriever",
+        "peekOfCode": "class MemoryRetriever:\n    SHORT_TERM_MEMORY = \"ShortTermMemory\"\n    SUMMARIZED_MEMORY = \"SummarizedMemory\"\n    LONG_TERM_MEMORY = \"LongTermMemory\"\n    TEMPLATE = \"\"\"You are an information retrieval bot, you are given a discord chat message, and a set of tools. It is your job to select the proper information collection tools to respond to the message.\nTools format:\nTool['parameter']: Tool description (tools can be called multiple times with different parameters, 0-1 parameter per call)\nTools:\nShortTermMemory[]: Recent full text chat messages\nSummarizedMemory[]: Summarized short term memory, contains significantly more messages than fully inflated ShortTermMemory",
+        "detail": "memory_retriever",
         "documentation": {}
     },
     {
