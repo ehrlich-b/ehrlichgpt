@@ -5,6 +5,7 @@ import asyncio
 import os
 import pprint
 import random
+from memory_retriever import MemoryRetriever
 import time
 
 import discord
@@ -188,12 +189,29 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         gpt_version = 4
     else:
         gpt_version = 3
-    chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
-    chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
+
     if gpt_version == 4:
         # Force a summarization, so if we haven't been summoned in awhile we don't submit 1000 tokens to gpt-4
         await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
+    # Construct a memory retreiver, arun it to get the requested memory, loop through the memory, if .SHORT_TERM_MEMORY for example then fill in get_active_memory()
+    memory_retriever = MemoryRetriever()
+    requested_memory = await memory_retriever.arun(formatted_content)
+    active_memory = ''
+    long_term_memory = ''
+    chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_direct_prompt())
+    for memory in requested_memory:
+        command, parameter = memory
+        if command == MemoryRetriever.LONG_TERM_MEMORY:
+            print("Long term memory: " + parameter)
+            long_term_memory = current_conversation.get_long_term_memories(parameter)
+        if command == MemoryRetriever.SUMMARIZED_MEMORY:
+            print("Summarized memory")
+            active_memory = current_conversation.active_memory
+        if command == MemoryRetriever.SHORT_TERM_MEMORY:
+            print("Short term memory")
+            chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
+    chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
     async with inbound_message.channel.typing():
-        await run_chain(inbound_message.channel, chain, discord_context, current_conversation.get_active_memory(), current_conversation.get_long_term_memories(formatted_content))
+        await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory)
 
 client.run(discord_bot_key)

@@ -91,6 +91,11 @@ Long-term memory:"""
             conversation.append(message.get_prompt_template())
         return conversation
 
+    def get_direct_prompt(self):
+        conversation = [Conversation.get_system_prompt_template()]
+        conversation.append(self.conversation_history[-1].get_prompt_template())
+        return conversation
+
     def get_conversation_token_count(self):
         return sum([message.get_number_of_tokens() for message in self.conversation_history])
 
