@@ -68,14 +68,17 @@ END EXAMPLES
     def _parse_tools(self, output: str) -> List[Tuple[str, str]]:
         print(output)
         try:
-            tools_section = re.search(r'Tools:\n(.*?)\nAnswer\[\]', output, re.DOTALL)
+            tools_section = re.search(r'Tools:\n(.*?)', output, re.DOTALL)
             if tools_section:
                 tools = tools_section.group(1).strip().split('\n')
                 parsed_tools = []
                 for tool in tools:
-                    tool_name, param = tool.strip().split('[')
-                    param = param[:-1]
-                    parsed_tools.append((tool_name, param.strip('"')))
+                    try:
+                        tool_name, param = tool.strip().split('[')
+                        param = param[:-1]
+                        parsed_tools.append((tool_name, param.strip('"')))
+                    except:
+                        print("Tool request malformed: " + tool)
                 return parsed_tools
         except:
             pass
