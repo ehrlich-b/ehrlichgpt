@@ -54,7 +54,7 @@ Your turn!
 {message}"""
 
     def __init__(self) -> None:
-        llm = ChatOpenAI(temperature=0.0)
+        llm = ChatOpenAI(temperature=0.0) # type: ignore
 
         prompt = PromptTemplate(
             template=self.TEMPLATE,
@@ -64,16 +64,20 @@ Your turn!
         self.chain = LLMChain(llm=llm, prompt=prompt)
 
     def _parse_tools(self, output: str) -> List[Tuple[str, str]]:
-        tools_section = re.search(r'Tools:\n(.*?)\nAnswer\[\]', output, re.DOTALL)
-        if tools_section:
-            tools = tools_section.group(1).strip().split('\n')
-            parsed_tools = []
-            for tool in tools:
-                tool_name, param = tool.strip().split('[')
-                param = param[:-1]
-                parsed_tools.append((tool_name, param.strip('"')))
-            return parsed_tools
-        return []
+        try:
+            tools_section = re.search(r'Tools:\n(.*?)\nAnswer\[\]', output, re.DOTALL)
+            if tools_section:
+                tools = tools_section.group(1).strip().split('\n')
+                parsed_tools = []
+                for tool in tools:
+                    tool_name, param = tool.strip().split('[')
+                    param = param[:-1]
+                    parsed_tools.append((tool_name, param.strip('"')))
+                return parsed_tools
+        except:
+            pass
+        finally:
+            return []
 
     def run(self, message: str) -> List[Tuple[str, str]]:
         output = self.chain.run(message=message)
