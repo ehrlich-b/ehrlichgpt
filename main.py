@@ -37,7 +37,9 @@ async def run_chain(channel, chain, discord_context, conversation_context, long_
     )
 
     response = clean_up_response(DISCORD_NAME, response)
-    await channel.send(response[:2000])
+    message_to_send = response[:2000]
+    print(f"Sending message: {message_to_send}")
+    await channel.send(message_to_send)
 
 def get_chat_llm(temperature=0.8, max_tokens=500, gpt_version=3):
     if gpt_version == 4:
@@ -91,8 +93,6 @@ async def queue_on_message(message):
     formatted_sender = message.author.name + "#" + message.author.discriminator
     at_mentioned = False
     if client_user in message.mentions:
-        at_mentioned = True
-    if DISCORD_NAME.lower() in message.content.lower():
         at_mentioned = True
     if "<@" + str(client_user.id) + ">" in message.content:
         at_mentioned = True
@@ -151,7 +151,7 @@ async def queue_on_message(message):
         repository.save_message(formatted_sender, censored_content)
 
         if at_mentioned:
-            await send_message_with_typing_indicator(current_conversation, context, message.channel, message, formatted_content)
+            await send_message_with_typing_indicator(current_conversation, context, message.channel, message)
         else:
             # Nobody is talking to us, summarize larger chunks so we're not constantly churning through summarization
             await repository.summarize_conversation(current_conversation, trigger_token_limit=500)
@@ -181,7 +181,7 @@ async def on_message(message):
         conversations[channel_id].enqueue_discord_message(message)
 
 
-async def send_message_with_typing_indicator(current_conversation, discord_context, channel, inbound_message, formatted_content):
+async def send_message_with_typing_indicator(current_conversation, discord_context, channel, inbound_message):
     channel_id = channel.id
     repository = Repository(channel_id)
     if current_conversation.requests_gpt_4():
@@ -195,7 +195,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
     # Construct a memory retreiver, arun it to get the requested memory, loop through the memory, if .SHORT_TERM_MEMORY for example then fill in get_active_memory()
     memory_retriever = MemoryRetriever()
-    requested_memory = await memory_retriever.arun(formatted_content, DISCORD_NAME)
+    requested_memory = await memory_retriever.arun(current_conversation.get_formatted_conversation(True), DISCORD_NAME)
     active_memory = ''
     long_term_memory = ''
     # TODO: We're always shoving in the full memory because the short term memory prompt isn't reliable enough
