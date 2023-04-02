@@ -1,5 +1,6 @@
 from builtins import str
 import asyncio
+import datetime
 import re
 from typing import Callable, List, Tuple
 from langchain.llms.base import BaseLLM
@@ -10,6 +11,7 @@ from langchain import LLMChain, LLMMathChain, SerpAPIWrapper
 from langchain.agents import load_tools
 from langchain.prompts import PromptTemplate
 from langchain.schema import (HumanMessage, AIMessage)
+from utils import get_formatted_date
 
 
 class MemoryRetriever:
@@ -18,6 +20,7 @@ class MemoryRetriever:
     WEB_SEARCH = "WebSearch"
     TEMPLATE = """You are an information retrieval bot, you are given a discord chat conversation, and a set of tools. It is your job to select the proper information collection tools to respond to the last message.
 
+Current date: {current_date}
 Your (the AI's) discord name is: {discord_name}
 
 Tools format:
@@ -60,7 +63,7 @@ END EXAMPLES
 
         prompt = PromptTemplate(
             template=self.TEMPLATE,
-            input_variables=["message", "discord_name"],
+            input_variables=["message", "discord_name", "current_date"],
         )
 
         self.chain = LLMChain(llm=llm, prompt=prompt)
@@ -69,7 +72,6 @@ END EXAMPLES
         print(output)
         try:
             tools_section = re.search(r'Tools:\n(.*)', output, re.DOTALL)
-            print(tools_section)
             if tools_section:
                 tools = tools_section.group(1).strip().split('\n')
                 parsed_tools = []
@@ -91,5 +93,5 @@ END EXAMPLES
         return self._parse_tools(output)
 
     async def arun(self, message: str, discord_name: str) -> List[Tuple[str, str]]:
-        output = await self.chain.arun(message=message, discord_name=discord_name)
+        output = await self.chain.arun(message=message, discord_name=discord_name, current_date=get_formatted_date())
         return self._parse_tools(output)

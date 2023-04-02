@@ -6,6 +6,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import asyncio
 
+from bing_search import BingSearch
+
 class WebExtractor:
     def __init__(self):
         self.chrome_driver_path = os.environ.get("CHROME_DRIVER_PATH")
@@ -47,7 +49,7 @@ class WebExtractor:
     def driver_available(self):
         return self.chrome_driver_path is not None
 
-    async def extract_text(self, url, tokenizer=default_tokenizer, tokens_per_chunk=3900) -> List[str]:
+    async def extract_text(self, url, tokenizer=default_tokenizer, tokens_per_chunk=2000) -> List[str]:
         if not self.driver_available():
             raise Exception("Chrome WebDriver path not found. Set CHROME_DRIVER_PATH environment variable.")
         loop = asyncio.get_event_loop()
@@ -57,4 +59,6 @@ class WebExtractor:
         tokens = tokenizer(visible_text)
         chunks = [''.join(tokens[i:i + tokens_per_chunk]) for i in range(0, len(tokens), tokens_per_chunk)]
         return chunks
+
+
 
