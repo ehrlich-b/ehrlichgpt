@@ -13,44 +13,46 @@ from langchain.schema import (HumanMessage, AIMessage)
 
 
 class MemoryRetriever:
-    SHORT_TERM_MEMORY = "ShortTermMemory"
     SUMMARIZED_MEMORY = "SummarizedMemory"
     LONG_TERM_MEMORY = "LongTermMemory"
-    TEMPLATE = """You are an information retrieval bot, you are given a discord chat message, and a set of tools. It is your job to select the proper information collection tools to respond to the message.
+    WEB_SEARCH = "WebSearch"
+    TEMPLATE = """You are an information retrieval bot, you are given a discord chat conversation, and a set of tools. It is your job to select the proper information collection tools to respond to the last message.
+
+Your (the AI's) discord name is: {discord_name}
 
 Tools format:
 Tool['parameter']: Tool description (tools can be called multiple times with different parameters, 0-1 parameter per call)
 
 Tools:
-ShortTermMemory[]: Recent full text chat messages
-SummarizedMemory[]: Summarized short term memory, contains significantly more messages than fully inflated ShortTermMemory
-LongTermMemory["embedding_query"]: Long term memory, parameter is the query to use, this will generate a query embedding and search for similar messages from chat history
-Answer[]: You've collected all the data you need, and are ready to forward on to the answer synthesizer bot
+SummarizedMemory[]: Summarized short term conversational memory (last 15-20 messages)
+LongTermMemory["embedding_query"]: Long term memory, parameter is the query to use, this will generate a query embedding and search for similar messages from chat history beyond the short term memory
+WebSearch["search_query"]: Search the web for fact based information that you don't know (i.e. because it's too recent)
+Answer[]: You've triggered collection of all the information the answer synthesizer bot will need
 
 Example 1:
-bob#1234: Do you think you can help me with that?
-Thought: This message is a continuation of a previous conversation, we need recent chat history
+sara#7890: Can you remind me what we discussed yesterday about the meeting agenda?
+Thought: This message is asking for a summary of a previous conversation from beyond the short-term memory
 Tools:
-ShortTermMemory[]
+LongTermMemory["sara#7890 meeting agenda"]
 SummarizedMemory[]
 Answer[]
 
 Example 2:
-bob#1234: What is the capital of France?
-Thought: No additional information is needed
+jane#5678: What's the latest news on Mars exploration?
+Thought: This message requires recent information which is not present in the chat history
 Tools:
+WebSearch["latest news Mars exploration"]
 Answer[]
 
 Example 3:
-bob#1234: Do you remember when we talked about my dogs? Do you remember their names?
-Thought: This message is asking for information about bob#1234, and information that may be in any of the chat histories, and that information may be in the user file
+peter#1234: I remember we talked about the benefits of a keto diet and the side effects of intermittent fasting. Can you give me a quick summary?
+Thought: This message requires information from two separate previous conversations
 Tools:
-ShortTermMemory[]
-SummarizedMemory[]
-LongTermMemory["bob#1423's dogs"]
+LongTermMemory["keto diet benefits"]
+LongTermMemory["intermittent fasting side effects"]
 Answer[]
 
-Your turn!
+END EXAMPLES
 {message}"""
 
     def __init__(self) -> None:
@@ -58,12 +60,13 @@ Your turn!
 
         prompt = PromptTemplate(
             template=self.TEMPLATE,
-            input_variables=["message"],
+            input_variables=["message", "discord_name"],
         )
 
         self.chain = LLMChain(llm=llm, prompt=prompt)
 
     def _parse_tools(self, output: str) -> List[Tuple[str, str]]:
+        print(output)
         try:
             tools_section = re.search(r'Tools:\n(.*?)\nAnswer\[\]', output, re.DOTALL)
             if tools_section:
@@ -76,13 +79,13 @@ Your turn!
                 return parsed_tools
         except:
             pass
-        finally:
-            return []
+        return []
+
 
     def run(self, message: str) -> List[Tuple[str, str]]:
         output = self.chain.run(message=message)
         return self._parse_tools(output)
 
-    async def arun(self, message: str) -> List[Tuple[str, str]]:
-        output = await self.chain.arun(message=message)
+    async def arun(self, message: str, discord_name: str) -> List[Tuple[str, str]]:
+        output = await self.chain.arun(message=message, discord_name=discord_name)
         return self._parse_tools(output)

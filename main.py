@@ -37,7 +37,7 @@ async def run_chain(channel, chain, discord_context, conversation_context, long_
     )
 
     response = clean_up_response(DISCORD_NAME, response)
-    await channel.send(response)
+    await channel.send(response[:2000])
 
 def get_chat_llm(temperature=0.8, max_tokens=500, gpt_version=3):
     if gpt_version == 4:
@@ -195,13 +195,14 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
     # Construct a memory retreiver, arun it to get the requested memory, loop through the memory, if .SHORT_TERM_MEMORY for example then fill in get_active_memory()
     memory_retriever = MemoryRetriever()
-    requested_memory = await memory_retriever.arun(formatted_content)
+    requested_memory = await memory_retriever.arun(formatted_content, DISCORD_NAME)
     active_memory = ''
     long_term_memory = ''
     # TODO: We're always shoving in the full memory because the short term memory prompt isn't reliable enough
     #chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_direct_prompt())
     chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
     for memory in requested_memory:
+        print(memory)
         command, parameter = memory
         if command == MemoryRetriever.LONG_TERM_MEMORY:
             print("Long term memory: " + parameter)
@@ -209,9 +210,6 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         if command == MemoryRetriever.SUMMARIZED_MEMORY:
             print("Summarized memory")
             active_memory = current_conversation.active_memory
-        if command == MemoryRetriever.SHORT_TERM_MEMORY:
-            print("Short term memory")
-            #chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
     chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
     async with inbound_message.channel.typing():
         await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory)
