@@ -1,5 +1,16 @@
 # EhrlichGPT
 
+Ehrlich means "honest" in german, and it also happens to be my last name.
+
+This is a discord bot that uses OpenAI's GPT-3 API to generate responses to messages in a discord server.
+
+It has several interesting features:
+* Modifies its own prompt based on the context of the conversation
+* Progressively summarized short term memory
+* Long term memory summarization and storage
+* Embedding based long term memory lookup
+* The ability to search the web for information
+
 ## Usage
 
 Copy .env.dist to .env and fill in variables with a valid DISCORD_BOT_TOKEN and OPENAI_API_KEY
@@ -60,3 +71,23 @@ Follow the steps found here https://python-poetry.org/docs/#installation to inst
     ```
     docker run --env-file .env -v <some_vol_name>:/app/conversations <imagename>:<tag>
     ```
+
+## [Optional] Install chrome web driver for web searching
+
+### Install chrome
+
+```
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+
+# Install dependencies probably
+sudo apt-get install -f
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+```
+
+### Install chromedriver
+
+```
+sudo apt install chromium-chromedriver
+sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+```
