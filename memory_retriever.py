@@ -68,7 +68,8 @@ END EXAMPLES
     def _parse_tools(self, output: str) -> List[Tuple[str, str]]:
         print(output)
         try:
-            tools_section = re.search(r'Tools:\n(.*?)', output, re.DOTALL)
+            tools_section = re.search(r'Tools:\n(.*)', output, re.DOTALL)
+            print(tools_section)
             if tools_section:
                 tools = tools_section.group(1).strip().split('\n')
                 parsed_tools = []
