@@ -211,7 +211,19 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
             print("Summarized memory")
             active_memory = current_conversation.active_memory
     chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
-    async with inbound_message.channel.typing():
+    async def typing_indicator_wrapper():
+        try:
+            async with channel.typing():
+                await asyncio.sleep(float('inf'))
+        except asyncio.CancelledError:
+            pass
+        except Exception as e:
+            print("Failed to indicate typing")
+
+    typing_task = asyncio.create_task(typing_indicator_wrapper())
+    try:
         await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory)
+    finally:
+        typing_task.cancel()
 
 client.run(discord_bot_key)
