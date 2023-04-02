@@ -5,6 +5,7 @@ import tiktoken
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
+from datetime import datetime
 
 
 def escape_prompt_content(content: str) -> str:
@@ -42,6 +43,10 @@ def format_discord_mentions(message: discord.Message):
         formatted_content = formatted_content.replace(f'<@{mention.id}>', formatted_mention)
 
     return formatted_content
+
+def get_formatted_date():
+    current_datetime = datetime.now()
+    return current_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
 async def scold() -> str:
     feelings_list = [

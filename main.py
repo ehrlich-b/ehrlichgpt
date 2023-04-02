@@ -6,6 +6,7 @@ import os
 import pprint
 import random
 from memory_retriever import MemoryRetriever
+from web_searcher import WebSearcher
 import time
 
 import discord
@@ -17,7 +18,8 @@ from langchain.prompts.chat import ChatPromptTemplate
 from conversation import Conversation
 from message import Message
 from repository import Repository
-from utils import format_discord_mentions, scold, truncate_text
+from utils import format_discord_mentions, get_formatted_date, scold, truncate_text
+from web_searcher import WebSearcher
 
 DISCORD_NAME = 'EhrlichGPT'
 
@@ -28,12 +30,14 @@ def clean_up_response(discord_name, original_response):
         original_response = original_response[len("AI:"):]
     return original_response.strip()
 
-async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory):
+async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory, search_results):
     response = await chain.arun(
         discord_name=DISCORD_NAME,
         discord_context=discord_context,
         conversation_context=conversation_context,
         long_term_memory=long_term_memory,
+        search_results=search_results,
+        current_date=get_formatted_date(),
     )
 
     response = clean_up_response(DISCORD_NAME, response)
@@ -198,8 +202,8 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
     requested_memory = await memory_retriever.arun(current_conversation.get_formatted_conversation(True), DISCORD_NAME)
     active_memory = ''
     long_term_memory = ''
-    # TODO: We're always shoving in the full memory because the short term memory prompt isn't reliable enough
-    #chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_direct_prompt())
+    search_results = ''
+
     chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
     for memory in requested_memory:
         print(memory)
@@ -210,6 +214,14 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         if command == MemoryRetriever.SUMMARIZED_MEMORY:
             print("Summarized memory")
             active_memory = current_conversation.active_memory
+        if command == MemoryRetriever.WEB_SEARCH:
+            print("Web search: " + parameter)
+            web_searcher = WebSearcher()
+            try:
+                await channel.send("Searching the web for that one...")
+            except:
+                print("Failed to send web search message")
+            search_results = "Web browsing results which may contain up to date information. Look closely to see if you can extract an answer to the most recent message:\n" + await web_searcher.run(parameter)
     chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
     async def typing_indicator_wrapper():
         try:
@@ -222,7 +234,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
 
     typing_task = asyncio.create_task(typing_indicator_wrapper())
     try:
-        await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory)
+        await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory, search_results)
     finally:
         typing_task.cancel()
 
