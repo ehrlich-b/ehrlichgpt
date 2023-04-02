@@ -8,8 +8,7 @@ from langchain.agents import load_tools
 from langchain.prompts import PromptTemplate
 from langchain.schema import (HumanMessage, AIMessage)
 
-
-llm = ChatOpenAI(temperature=0.0)
+llm = ChatOpenAI(temperature=0.0) # type: ignore
 
 template="""You are an information retrieval bot, you are given a discord chat message, and a set of tools. It is your job to select the proper information collection tools to respond to the message.
 

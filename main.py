@@ -198,7 +198,9 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
     requested_memory = await memory_retriever.arun(formatted_content)
     active_memory = ''
     long_term_memory = ''
-    chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_direct_prompt())
+    # TODO: We're always shoving in the full memory because the short term memory prompt isn't reliable enough
+    #chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_direct_prompt())
+    chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
     for memory in requested_memory:
         command, parameter = memory
         if command == MemoryRetriever.LONG_TERM_MEMORY:
@@ -209,7 +211,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
             active_memory = current_conversation.active_memory
         if command == MemoryRetriever.SHORT_TERM_MEMORY:
             print("Short term memory")
-            chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
+            #chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
     chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
     async with inbound_message.channel.typing():
         await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory)

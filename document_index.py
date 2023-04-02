@@ -3,19 +3,22 @@ import faiss
 import numpy as np
 from langchain.embeddings.openai import OpenAIEmbeddings
 from repository import Repository
+import typing
 
 class DocumentIndex:
     INDEX_WINDOW = 10
     TEXT_EMBEDDING_ADA_002_DIMENSION = 1536
     def __init__(self, channel_id):
         self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002")
-        self.index = None
+        self.index: Optional[faiss.IndexFlatL2] = None
         self.channel_id = channel_id
         self.repository = Repository(channel_id)
 
     def add_message(self, message, unix_timestamp: int):
         if self.index is None:
             self.load_or_create_index()
+        # This fills mypy with joy
+        assert self.index is not None
 
         document_embedding = self.embeddings.embed_documents([message])[0]
         serialized_embedding = ",".join(map(str, document_embedding))
