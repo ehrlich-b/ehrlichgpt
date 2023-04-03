@@ -24,13 +24,23 @@ from web_searcher import WebSearcher
 DISCORD_NAME = 'EhrlichGPT'
 
 def clean_up_response(discord_name, original_response):
-    if original_response.startswith(discord_name + ":"):
-        original_response = original_response[len(discord_name + ":"):]
-    elif original_response.startswith("AI:"):
-        original_response = original_response[len("AI:"):]
-    return original_response.strip()
+    print(f"Original response: {original_response}")
+    search_term = "Response:"
+    start_index = original_response.find(search_term)
+    response = ""
+    if start_index != -1:
+        response_start = start_index + len(search_term)
+        response = original_response[response_start:].strip()
+        response = response.strip('\"')
+    else:
+        response = original_response
+    if response.startswith(discord_name + ":"):
+        response = response[len(discord_name + ":"):]
+    elif response.startswith("AI:"):
+        response = response[len("AI:"):]
+    return response.strip()
 
-async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory, search_results):
+async def run_chain(channel, chain, discord_context, conversation_context, long_term_memory, search_results, latest_messages):
     response = await chain.arun(
         discord_name=DISCORD_NAME,
         discord_context=discord_context,
@@ -38,6 +48,7 @@ async def run_chain(channel, chain, discord_context, conversation_context, long_
         long_term_memory=long_term_memory,
         search_results=search_results,
         current_date=get_formatted_date(),
+        latest_messages=latest_messages,
     )
 
     response = clean_up_response(DISCORD_NAME, response)
@@ -234,7 +245,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
 
     typing_task = asyncio.create_task(typing_indicator_wrapper())
     try:
-        await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory, search_results)
+        await run_chain(inbound_message.channel, chain, discord_context, active_memory, long_term_memory, search_results, current_conversation.get_formatted_conversation(True))
     finally:
         typing_task.cancel()
 
