@@ -75,6 +75,7 @@ Search query: {search_query}
 Result snippets:
 {snippets}
 Browsed text:
+URL: {browsed_url}
 {extracted_text}
 Answer:"""
     def __init__(self) -> None:
@@ -84,6 +85,9 @@ Answer:"""
 
     async def run(self, search_query: str) -> str:
         results = await self.web_searcher.results(search_query)
+        if len(results) == 0:
+            return ""
+
         snippets = ['WEB RESULT\n' + result.name + '\n' + result.snippet + '\n\n' for result in results]
 
         url_to_extract = results[0].url
@@ -93,7 +97,7 @@ Answer:"""
 
         chain = LLMChain(llm=self.llm, prompt=PromptTemplate(
                 template=self.BROWSE_TEMPLATE,
-                input_variables=["snippets", "search_query", "extracted_text"]
+                input_variables=["snippets", "search_query", "extracted_text", "browsed_url"]
             )
         )
         print(snippets)
@@ -102,6 +106,7 @@ Answer:"""
             search_query=search_query,
             snippets=snippets,
             extracted_text=chunks[0],
+            browsed_url=url_to_extract
         )
         print(response)
         return response.strip()

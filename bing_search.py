@@ -36,7 +36,7 @@ class BingSearch:
         web_results = []
         results = await self._bing_search_results(query, count=self.query_result_count)
         if len(results) == 0:
-            return [WebResult(id="", name="No good Bing Search Result was found", url="", display_url="", snippet="", date_last_crawled="", language="", is_navigational=False)]
+            return []
 
         for result in results:
             web_result = WebResult(
