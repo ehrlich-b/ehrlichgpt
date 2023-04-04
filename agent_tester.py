@@ -20,7 +20,7 @@ Tool['parameter']: Tool description (tools can be called multiple times with dif
 Tools:
 SummarizedMemory[]: Summarized short term conversational memory (last 15-20 messages)
 LongTermMemory["embedding_query"]: Long term memory, parameter is the query to use, this will generate a query embedding and search for similar messages from chat history beyond the short term memory
-WebSearch["search_query"]: Search the web for fact based information that you don't know (i.e. because it's too recent)
+WebSearch["search_query"]: Search the web for fact based information that you don't know (i.e. because it's too recent), but not for general tips you can already make suggestions on unless specifically asked for a web search
 Answer[]: You've triggered collection of all the information the answer synthesizer bot will need
 
 Example 1:

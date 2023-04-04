@@ -62,7 +62,7 @@ New short-term memories:
 Long-term memory:"""
 
     RESPONSE_TEMPLATE = """You are a LLM running in the context of discord, username: {discord_name}
-Think carefully about how you can add to the conversation based on what you can see from the context.
+Here is a variety of information that may be useful for generating your response:
 Current date: {current_date}
 Discord information: {discord_context}
 {conversation_context}
@@ -73,11 +73,11 @@ Latest conversation history:
 {latest_messages}
 End conversation history
 
-Think like an investigator about what you can gather from context, or the web search result, then write a response.
+Now, here's what we need for a response - First, think like an investigator about what you can gather from context, or the web search result. Second, write a response.
 Remember the last question or statement is addressed to you, so make sure the "response" is a direct response to that question or statement.
 For example:
-Investigation results: [answer extracted from web result, hint about what the user is asking for from the conversation context, etc. N/A if not relevant for the context]
-Response: [Response that answers the question, or adds to the conversation]
+Investigation results: [answer extracted from web result, hint about what the user is asking for from the conversation context, etc. N/A if not relevant for the context, focus on brevity and information density]
+Response: [Response that answers the question, or adds to the conversation, focus on conversationality and clarity]
 
 Your turn:
 Investigation results:"""

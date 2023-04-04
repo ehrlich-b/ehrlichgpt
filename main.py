@@ -139,11 +139,16 @@ async def queue_on_message(message):
     if message.author == client_user:
         # Add our own AI message to conversation
         truncated_content = truncate_text(formatted_content, 100)
-        current_conversation.add_message(Message("ai", truncated_content, int(time.time())))
-        repository.save_message("ai", truncated_content)
-        # We're responding, so we're being talked to, we don't want to constantly summarize, but we also
-        # don't want to re-submit huge history in prompts, so 500,300,[add when you try another]? Idk
-        await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
+        violates_rules = Message.violates_content_policy(truncated_content)
+        if not violates_rules:
+            current_conversation.add_message(Message("ai", truncated_content, int(time.time())))
+            repository.save_message("ai", truncated_content)
+            # We're responding, so we're being talked to, we don't want to constantly summarize, but we also
+            # don't want to re-submit huge history in prompts, so 500,300,[add when you try another]? Idk
+            await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
+        else:
+            print("Not saving message because it violates rules: " + truncated_content)
+            await message.channel.send("You managed to make the AI say something that violates the rules. Impressive! Please write a thank you letter to OpenAI for saving you from the content of this message.")
         return
     else:
         violates_rules = Message.violates_content_policy(message.content) # Use raw content here just in case usernames contain something that would censor
@@ -210,7 +215,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         await repository.summarize_conversation(current_conversation, trigger_token_limit=300)
     # Construct a memory retreiver, arun it to get the requested memory, loop through the memory, if .SHORT_TERM_MEMORY for example then fill in get_active_memory()
     memory_retriever = MemoryRetriever()
-    requested_memory = await memory_retriever.arun(current_conversation.get_formatted_conversation(True), DISCORD_NAME)
+    requested_memory = await memory_retriever.arun(current_conversation.get_formatted_conversation(), DISCORD_NAME)
     active_memory = ''
     long_term_memory = ''
     search_results = ''
@@ -228,11 +233,9 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
         if command == MemoryRetriever.WEB_SEARCH:
             print("Web search: " + parameter)
             web_searcher = WebSearcher()
-            try:
-                await channel.send("Searching the web for that one...")
-            except:
-                print("Failed to send web search message")
-            search_results = "Web browsing results which may contain up to date information. Look closely to see if you can extract an answer to the most recent message:\n" + await web_searcher.run(parameter)
+            browse_results = await web_searcher.run(parameter)
+            if browse_results != '':
+                search_results = "Web browsing results which may contain information up to {current_date}:\n" +
     chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
     async def typing_indicator_wrapper():
         try:
