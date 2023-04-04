@@ -235,7 +235,7 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
             web_searcher = WebSearcher()
             browse_results = await web_searcher.run(parameter)
             if browse_results != '':
-                search_results = "Web browsing results which may contain information up to {current_date}:\n" +
+                search_results = "Web browsing results which may contain information up to {current_date}:\n" + browse_results
     chain = LLMChain(llm=get_chat_llm(gpt_version=gpt_version), prompt=chat_prompt_template)
     async def typing_indicator_wrapper():
         try:
