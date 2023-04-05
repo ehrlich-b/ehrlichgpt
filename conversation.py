@@ -61,10 +61,27 @@ New short-term memories:
 
 Long-term memory:"""
 
-    RESPONSE_TEMPLATE = """You are a LLM running in the context of discord, username: {discord_name}
-Here is a variety of information that may be useful for generating your response:
+    RESPONSE_TEMPLATE = """You are a LLM running in the context of discord, your username: {discord_name}
 Current date: {current_date}
-Discord information: {discord_context}
+Discord context: {discord_context}
+
+First, think like an investigator about what you can gather from context, or the web search result. Second, write a response.
+The last question or statement in conversation history is addressed to you, so make sure the "Response:" is a response to that question or statement, based on the context of the conversation.
+For example:
+Investigation results: [What relevant information can you gather from conversation context or the web search result? Results should be short and concise.]
+Response: [Response should focus on being conversational and clarity.]
+
+Example:
+Latest conversation history:
+sam#1234: What are some cool recent video games?
+{discord_name}: Web results show that the most popular games are: [list of games]
+sam#1234: Which one should I play?
+End conversation history
+
+Investigation results: sam#1234 request to select a game from AI's last message
+Response: I recommend playing [game name] because [reason]
+
+Your turn:
 {conversation_context}
 {long_term_memory}
 {search_results}
@@ -73,13 +90,6 @@ Latest conversation history:
 {latest_messages}
 End conversation history
 
-Now, here's what we need for a response - First, think like an investigator about what you can gather from context, or the web search result. Second, write a response.
-Remember the last question or statement is addressed to you, so make sure the "response" is a direct response to that question or statement.
-For example:
-Investigation results: [answer extracted from web result, hint about what the user is asking for from the conversation context, etc. N/A if not relevant for the context, focus on brevity and information density]
-Response: [Response that answers the question, or adds to the conversation, focus on conversationality and clarity]
-
-Your turn:
 Investigation results:"""
 
     def __init__(self, conversation_id, conversation_history, active_memory, long_term_memory) -> None:
