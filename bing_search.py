@@ -24,7 +24,7 @@ class BingSearch:
         }
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.get(self.search_url, headers=headers, params=params)
+                response = await client.get(self.search_url, headers=headers, params=params, timeout=10)
             response.raise_for_status()
             search_results = response.json()
             return search_results["webPages"]["value"]

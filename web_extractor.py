@@ -17,11 +17,18 @@ class WebExtractor:
         chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(executable_path=self.chrome_driver_path, options=chrome_options)
 
-        driver.get(url)
+        driver.set_page_load_timeout(5)
+        driver.implicitly_wait(5)
+
+        try:
+            driver.get(url)
+        except:
+            print(f"Error fetching {url}")
+            driver.quit()
+            return ''
 
         # Get the HTML content
         html_content = driver.page_source
-
         driver.quit()
 
         return html_content
