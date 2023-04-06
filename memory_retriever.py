@@ -30,6 +30,7 @@ Tools:
 SummarizedMemory[]: Summarized short term conversational memory (last 15-20 messages)
 LongTermMemory["embedding_query"]: Long term memory, parameter is the query to use, this will generate a query embedding and search for similar messages from chat history beyond the short term memory
 WebSearch["search_query"]: Search the web for fact based information that you don't know (i.e. because it's too recent)
+CodeGen[]: If the user is making a request for any type of code generation, you must call this tool
 Answer[]: You've triggered collection of all the information the answer synthesizer bot will need
 
 Example 1:

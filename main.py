@@ -222,7 +222,6 @@ async def send_message_with_typing_indicator(current_conversation, discord_conte
 
     chat_prompt_template = ChatPromptTemplate.from_messages(conversations[channel_id].get_conversation_prompts())
     for memory in requested_memory:
-        print(memory)
         command, parameter = memory
         if command == MemoryRetriever.LONG_TERM_MEMORY:
             print("Long term memory: " + parameter)

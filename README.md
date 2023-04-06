@@ -1,6 +1,6 @@
 # EhrlichGPT
 
-Ehrlich means "honest" in german, and it also happens to be my last name.
+Ehrlich means "honest" in german, and it also happens to be my last name. This project is 100% for fun, so try not to take it too seriously.
 
 This is a discord bot that uses OpenAI's GPT-3 API to generate responses to messages in a discord server.
 
@@ -9,7 +9,29 @@ It has several interesting features:
 * Progressively summarized short term memory
 * Long term memory summarization and storage
 * Embedding based long term memory lookup
-* The ability to search the web for information
+* Rudimentary ability to search the web for information
+* gpt-4 support
+
+TODOs (also see [contributing](CONTRIBUTING.md)):
+* Voice integration
+* DALL-E integration
+* Come up with a more objective way to measure progress improving the prompt
+
+## The Good
+
+![EhrlichGPT doing well](./demo/good.png)
+
+I'm calling this good because the recollection went well. gpt-3.5-turbo still hallucinated that Aaron Burr was president, but that really is what we'd talked about before. It successfully looked up the weather from the internet a couple of times, but then came to the wrong conclusion about the temperature.
+
+## The Bad
+
+![EhrlichGPT doing bad](./demo/bad.png)
+
+gpt-3.5-turbo seems to have completely ignored the first question. But when asked about it was eventually able to answer. What I really want to highlight is the summary taking a long time - improvements needed here.
+
+## Want to Help?
+
+If you want to help see the [contributing](CONTRIBUTING.md)
 
 ## Usage
 
@@ -72,9 +94,9 @@ Follow the steps found here https://python-poetry.org/docs/#installation to inst
     docker run --env-file .env -v <some_vol_name>:/app/conversations <imagename>:<tag>
     ```
 
-## [Optional] Install chrome web driver for web searching
+### [Optional] Install chrome web driver for web searching
 
-### Install chrome
+#### Install chrome
 
 ```
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -85,7 +107,7 @@ sudo apt-get install -f
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 ```
 
-### Install chromedriver
+#### Install chromedriver
 
 ```
 sudo apt install chromium-chromedriver
