@@ -81,7 +81,7 @@ Answer:"""
     def __init__(self) -> None:
         self.web_extractor = WebExtractor()
         self.web_searcher = BingSearch()
-        self.llm = ChatOpenAI(temperature=0.0) # type: ignore
+        self.llm = ChatOpenAI(temperature=0.0, model="gpt-4o-mini") # type: ignore
 
     async def run(self, search_query: str) -> str:
         results = await self.web_searcher.results(search_query)

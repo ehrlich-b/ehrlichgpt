@@ -74,7 +74,7 @@ Try to keep it short.
 Dear friend,""",
     )
 
-    llm = ChatOpenAI(temperature=0.9) # type: ignore
+    llm = ChatOpenAI(temperature=0.9, model="gpt-4o-mini") # type: ignore
     chain = LLMChain(llm=llm, prompt=prompt)
     generated_paragraph = await chain.arun(feeling_1=feeling_1, feeling_2=feeling_2)
 

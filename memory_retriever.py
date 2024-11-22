@@ -60,7 +60,7 @@ END EXAMPLES
 {message}"""
 
     def __init__(self) -> None:
-        llm = ChatOpenAI(temperature=0.0) # type: ignore
+        llm = ChatOpenAI(temperature=0.0, model="gpt-4o-mini") # type: ignore
 
         prompt = PromptTemplate(
             template=self.TEMPLATE,

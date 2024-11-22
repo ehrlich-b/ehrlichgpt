@@ -151,7 +151,7 @@ Investigation results:"""
             new_short_term_memories = self.active_memory
 
             summarizer_prompt = PromptTemplate(template=prompt_template, input_variables=["new_short_term_memories"])
-            chain = LLMChain(llm=ChatOpenAI(temperature=0.7, max_tokens=1000), prompt=summarizer_prompt)
+            chain = LLMChain(llm=ChatOpenAI(temperature=0.7, max_tokens=1000, model="gpt-4o-mini"), prompt=summarizer_prompt)
 
             new_long_term_memory = (await chain.apredict(current_summary=self.long_term_memory, new_short_term_memories=new_short_term_memories)).strip()
             self.long_term_memory = new_long_term_memory
@@ -174,7 +174,7 @@ Investigation results:"""
         new_lines = self.get_formatted_conversation()
 
         summarizer_prompt = PromptTemplate(template=prompt_template, input_variables=["new_lines"])
-        chain = LLMChain(llm=ChatOpenAI(temperature=0.7, max_tokens=1000), prompt=summarizer_prompt)
+        chain = LLMChain(llm=ChatOpenAI(temperature=0.7, max_tokens=1000, model="gpt-4o-mini"), prompt=summarizer_prompt)
 
         new_summary = (await chain.apredict(current_summary=self.active_memory, new_lines=new_lines)).strip()
         new_summary_tokens = len(tokenize_text(new_summary))

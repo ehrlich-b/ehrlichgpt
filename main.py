@@ -58,9 +58,9 @@ async def run_chain(channel, chain, discord_context, conversation_context, long_
 
 def get_chat_llm(temperature=0.8, max_tokens=500, gpt_version=3):
     if gpt_version == 4:
-        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4')
+        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model='gpt-4o')
     else:
-        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens)
+        chat_llm = ChatOpenAI(temperature=temperature, max_tokens=max_tokens, model="gpt-4o-mini")
     return chat_llm
 
 def load_conversation(channel_id):

@@ -3,16 +3,17 @@ from langchain.llms.base import BaseLLM
 from langchain.agents import initialize_agent, Tool
 from langchain.tools import BaseTool
 from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatGooglePalm
 from langchain import LLMChain, LLMMathChain, SerpAPIWrapper
 from langchain.agents import load_tools
 from langchain.prompts import PromptTemplate
 from langchain.schema import (HumanMessage, AIMessage)
 
-llm = ChatOpenAI(temperature=0.0) # type: ignore
+#llm = ChatOpenAI(temperature=0.0) # type: ignore
+llm = ChatGooglePalm(temperature=0.0) # type: ignore
 
 template="""You are an information retrieval bot, you are given a discord chat conversation, and a set of tools. It is your job to select the proper information collection tools to respond to the last message.
 
-Your (the AI's) discord name is: {discord_name}
 
 Tools format:
 Tool['parameter']: Tool description (tools can be called multiple times with different parameters, 0-1 parameter per call)
